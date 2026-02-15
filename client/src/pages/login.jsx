@@ -1,8 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import foodImage from "../assets/food.jpg";
 import { Link } from "react-router-dom";
+import { supabase } from "../../supabase";
 
-function App() {
+function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  async function loginUser() {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    console.log("Login data:", data);
+    console.log("Login error:", error);
+
+    if (error) {
+      setMessage(`Login failed: ${error.message}`);
+    } else {
+      setMessage(`Logged in as: ${data.user.email}`);
+
+    }
+  }
+
   return (
     <div style={styles.page}>
       <div style={styles.container}>
@@ -15,13 +37,23 @@ function App() {
           </div>
 
           <div style={styles.formContainer}>
-            <input type="text" placeholder="Email" style={styles.input} />
+            <input
+              type="text"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={styles.input}
+            />
             <input
               type="password"
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               style={styles.input}
             />
-            <button style={styles.button}>Login</button>
+            <button style={styles.button} onClick={loginUser}>
+              Login
+            </button>
             <p style={styles.registerText}>
               Don't have an account?{" "}
               <Link to="/register" style={styles.registerLink}>
@@ -61,7 +93,7 @@ const styles = {
   leftSide: {
     display: "flex",
     flexDirection: "column",
-    width: "500px", 
+    width: "500px",
     backgroundColor: "#f9f9f9",
     justifyContent: "center",
     alignItems: "center",
@@ -136,4 +168,4 @@ const styles = {
   },
 };
 
-export default App;
+export default Login;
