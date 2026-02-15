@@ -1,7 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { supabase } from "../../supabase";
 
 function Register() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+    
+  async function registerUser() {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    console.log("Login data:", data);
+    console.log("Login error:", error);
+
+    if (error) {
+      setMessage(`Login failed: ${error.message}`);
+    } else {
+      setMessage(`Logged in as: ${data.user.email}`);
+    }
+  }
+    
   return (
     <div style={styles.page}>
       <div style={styles.container}>
@@ -12,18 +33,23 @@ function Register() {
           </div>
 
           <div style={styles.formContainer}>
-            <input type="email" placeholder="Email" style={styles.input} />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={styles.input}
+            />
             <input
               type="password"
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               style={styles.input}
             />
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              style={styles.input}
-            />
-            <button style={styles.button}>Sign Up</button>
+            <button style={styles.button} onClick={registerUser}>
+              Sign Up
+            </button>
             <p style={styles.registerText}>
               Already have an account?{" "}
               <Link to="/login" style={styles.registerLink}>
