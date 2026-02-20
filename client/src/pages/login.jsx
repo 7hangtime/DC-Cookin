@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import foodImage from "../assets/food.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   async function loginUser() {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -21,7 +22,7 @@ function Login() {
       setMessage(`Login failed: ${error.message}`);
     } else {
       setMessage(`Logged in as: ${data.user.email}`);
-
+      navigate("/pantry");
     }
   }
 
