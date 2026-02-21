@@ -52,8 +52,13 @@ return (
         <div style={styles.header}>
         <h1 style={{...styles.title, color:"#ffffff", position:"relative", top:"10px", left:"-750px"}}>My Pantry</h1>
         <p style={{...styles.subtitle, position:"absolute", top:"50px", right:"60px", color:"#ffffff", fontFamily:"Arial, sans-serif"}}>{user ? <p>Logged in as: {user.email}</p> : <p>Not logged in</p>}</p>
-        {/* <p style={{...styles.signInText, color:"#ffffff"}}>Your personal pantry items</p> */}
-        <p style={{...styles.signInText, color:"#ffffff00"}}> space</p>
+        {/* add ingredient section */}
+        <p style={styles.header} >  
+          <p style={{...styles.container, backgroundColor:"#cac7c7e0", borderRadius:"15px", padding:"10px", width:"1000px",height:"8px", position:"relative", left:"150px" }}>
+            <h1 style={{...styles.title, color:"#ee0000", fontSize:"10px"}}>temp add ingredient section'</h1>
+          </p>
+        </p>
+        {/* show ingredient(s) section */}
         <p style={{...styles.container, backgroundColor:"#ffffff", borderRadius:"15px", padding:"20px", marginTop:"20px", width:"2000px",height:"600px", boxShadow: "0 4px 20px rgba(0,0,0,0.1)", position:"relative", left:"150px" }}>
             {pantryItems.length > 0 ? (
             <ul>
@@ -69,8 +74,8 @@ return (
       </div>
       
        
-       
-      {/* <div style={styles.container}>
+       {/*  Original page */}
+      {/* <div style={styles.container}>         
         <div style={styles.leftSide}>
           <div style={styles.titleContainer}>
             <h2 style={styles.title}>Pantry</h2>
@@ -89,6 +94,8 @@ return (
           </div>
         </div>
       </div> */}
+
+      
     </div>
   );
 
