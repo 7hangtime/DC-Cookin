@@ -27,25 +27,7 @@ export default function Pantry() {
     fetchSessionAndPantry();
   }, []);
 
-  // return (
-  //   <div style={{ padding: "40px" }}>
-  //     <h2>Pantry Page (Auth Test)</h2>
-
-  //     {user ? <p>Logged in as: {user.email}</p> : <p>Not logged in</p>}
-
-  //     <h3>My Pantry Items:</h3>
-  //     {pantryItems.length > 0 ? (
-  //       <ul>
-  //         {pantryItems.map((item) => (
-  //           <li key={item.id}>{item.ingredient_name}</li>
-  //         ))}
-  //       </ul>
-  //     ) : (
-  //       <p>No pantry items yet.</p>
-  //     )}
-  //   </div>
-  //    );
-     
+    
 return (
     <div style={{padding: "40px", position: "relative", minHeight: "100vh"}}>
       <div style={{...styles.container, backgroundColor:"#344d9e", backgroundImage:"linear-gradient(135deg, #0010f7 0%, #75a6ce 100%)"}}>
@@ -75,25 +57,26 @@ return (
       
        
        {/*  Original page */}
-      {/* <div style={styles.container}>         
-        <div style={styles.leftSide}>
-          <div style={styles.titleContainer}>
-            <h2 style={styles.title}>Pantry</h2>
-            <p style={styles.signInText}>Your personal pantry items</p>
+{/* return(
+  <div style={styles.container}>         
+    <div style={styles.leftSide}>
+      <div style={styles.titleContainer}>
+        <h2 style={styles.title}>Pantry</h2>
+        <p style={styles.signInText}>Your personal pantry items</p>
 
-            {pantryItems.length > 0 ? (
-            <ul>
-              {pantryItems.map((item) => (
-                <li key={item.id}>{item.ingredient_name}</li>
-              ))}
-            </ul>
-            ) : (
-              <p>No pantry items yet.</p>
-            )}
+        {pantryItems.length > 0 ? (
+        <ul>
+          {pantryItems.map((item) => (
+            <li key={item.id}>{item.ingredient_name}</li>
+          ))}
+        </ul>
+        ) : (
+          <p>No pantry items yet.</p>
+        )}
 
-          </div>
-        </div>
-      </div> */}
+      </div>
+    </div>
+  </div> */}
 
       
     </div>
