@@ -10,6 +10,42 @@ export default function PantryAdd() {
     const [searchTerm, setSearchTerm] = useState("");
     {/* Creates list to hold ingredients ready to be added */}
     const [holdingList, setHoldingList] = useState([]);
+    const [prefer, setPrefer] = useState(0);
+    const [avoid, setAvoid] = useState(0);
+    {/* Preference creation function, cycles through prefer, avoid, and neutral */}
+    function cycle_preference(type){
+        if (type === "prefer") {
+            setPrefer((prev) => (prev === 1 ? 0 : 1));    
+                // backgroundColor = '#83e67b'
+            
+            
+
+        } else if (type === "avoid") {
+            setAvoid((prev) => (prev === 1 ? 0 : 1));
+            // backgroundColor = '#e65353';
+        }
+    };
+    function create_preference(prefer, avoid){
+        if (prefer == 1 && avoid == 0)
+            return 1;
+        else if (avoid == 1 && prefer == 0)
+            return -1;
+        else
+            return 0;
+    };
+    function update_preference(){
+        cur = this.preferece;
+        if(cur == -1){
+            this.preference = 0;
+        }
+        else if(cur == 0){
+            this.preference = 1;
+        }
+        else if(cur == 1){
+            this.preference = -1;
+        }
+    };
+    
 
     useEffect(() => {
         const fetchSessionAndPantry = async () => {
@@ -55,6 +91,7 @@ export default function PantryAdd() {
         fetchSessionAndPantry();
     }, []);
 
+    
     {/* Adds ingredients to holding list*/}
     const addHoldingList = (ingredient) => {
         if (!ingredient) return;
@@ -81,7 +118,7 @@ export default function PantryAdd() {
                 user_id: user.id, 
                 ingredient_id: ingredient.id, 
                 ingredient_name: ingredient.ingredient_name,
-                Preference: 0
+                Preference: create_preference(prefer, avoid)
             }))).select();
         
         {/* Catches errors, if no errors, updates pantry on page */}
@@ -177,12 +214,53 @@ return (
                         position: "absolute",
                         marginTop: "5px",
                         marginLeft: "120px",
-                        padding: "10px 430px",
+                        padding: "10px 390px",
                         borderRadius: "8px",
                         border: "1px solid #000000",
                         marginBottom: "510px"
                     }}
                 />
+
+                {/* prefer button */}
+                <h1 style={{color:"black", position: "absolute", marginTop: "2px", marginLeft: "1082px", padding: "1px 1px", borderRadius: "8px", fontSize:"12px"}}>Prefer</h1>
+                <checkbox
+
+                    onClick={() => cycle_preference("prefer")}
+                    style={{
+                        position: "absolute",
+                        marginTop: "17px",
+                        marginLeft: "1090px",
+                        padding: "10px 10px",
+                        borderRadius: "8px",
+                        border: "1px solid #000000",
+                        backgroundColor: "#ffffff",
+                        cursor: "pointer"
+                    }}
+                >
+                    
+                </checkbox>
+                
+
+                {/* avoid button */}
+                <h1 style={{color:"black", position: "absolute", marginTop: "2px", marginLeft: "1125px", padding: "1px 1px", borderRadius: "8px", fontSize:"12px"}}>Avoid</h1>
+                <checkbox 
+                    type="avoid"
+                    onClick={() => cycle_preference("avoid")}
+                    style={{
+                        text: "Avoid",
+                        color: "black",
+                        position: "absolute",
+                        marginTop: "17px",
+                        marginLeft: "1130px",
+                        padding: "10px 10px",
+                        borderRadius: "8px",
+                        border: "1px solid #000000",
+                        backgroundColor: "#ffffff",
+                        cursor: "pointer"
+                    }}
+                >
+                </checkbox>
+
 
                 {/* Add button */}
                 <button

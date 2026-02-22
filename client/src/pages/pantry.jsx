@@ -34,6 +34,7 @@ return (
         <div style={styles.header}>
         <h1 style={{...styles.title, color:"#ffffff", position:"relative", top:"10px", left:"-750px"}}>My Pantry</h1>
         <p style={{...styles.subtitle, position:"absolute", top:"50px", right:"60px", color:"#ffffff", fontFamily:"Arial, sans-serif"}}>{user ? <p>Logged in as: {user.email}</p> : <p>Not logged in</p>}</p>
+        <button style={{...styles.button, position:"absolute", top:"150px", right:"60px", width:"150px", backgroundColor:"#00ff62", color:"#000000"}} onClick={() => window.location.href = "/pantry-add"}>Add Ingredient</button>
         {/* add ingredient section */}
         <p style={styles.header} >  
           <p style={{...styles.container, backgroundColor:"#cac7c7e0", borderRadius:"15px", padding:"10px", width:"1000px",height:"8px", position:"relative", left:"150px" }}>
