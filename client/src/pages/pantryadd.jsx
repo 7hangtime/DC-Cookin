@@ -43,7 +43,11 @@ export default function PantryAdd() {
         if (!ingredient) return;
 
         const exists = holdingList.find(item => item.id === ingredient.id);
-        if (exists) return;
+        if (exists) {
+            setHoldingList(holdingList.filter(item => item.id !== ingredient.id));
+        } else {
+            setHoldingList([...holdingList, ingredient]);
+        }
 
         setHoldingList([...holdingList, ingredient]);
     };
@@ -68,6 +72,27 @@ export default function PantryAdd() {
     const filteredIngredients = ingredientsList.filter((ingredient) =>
         ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const loadIngredients = () => {
+        return filteredIngredients.map((ingredient) => {
+            const isSelected = holdingList.some(item => item.id === ingredient.id);
+            return (
+                <button
+                    key={ingredient.id}
+                    onClick={() => addHoldingList(ingredient)}
+                    style={{
+                        padding: "8px 12px",
+                        borderRadius: "8px",
+                        border: "1px solid #000000",
+                        backgroundColor: isSelected? "#06402B":"#f0f0f0",
+                        cursor: "pointer"
+                    }}
+                >
+                    {ingredient.ingredient_name}
+                </button>
+            );
+        });
+    };
 
 return (
     <div style={{
@@ -150,21 +175,7 @@ return (
 
                 {filteredIngredients.length > 0 ? (
                     <ul>
-                        {filteredIngredients.map((ingredient) => (
-                            <button
-                                key={ingredient.id}
-                                onClick={() => addHoldingList(ingredient)}
-                                style={{
-                                    padding: "8px 12px",
-                                    borderRadius: "8px",
-                                    border: "1px solid #000000",
-                                    backgroundColor: "#f0f0f0",
-                                    cursor: "pointer"
-                                }}
-                            >
-                                {ingredient.ingredient_name}
-                            </button>
-                        ))}
+                        {loadIngredients()};
                     </ul>
                 ) : (
                     <p style={{ 
