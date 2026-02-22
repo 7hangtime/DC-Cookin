@@ -19,13 +19,18 @@ export default function PantryAdd() {
             setUser(loggedUser);
 
             try {
-            const res = await fetch(
-                `http://localhost:3000/api/pantry?userId=${loggedUser.id}`
-            );
-            const items = await res.json();
-            setPantryItems(items); 
-            } catch (err) {
-            console.error("Failed to fetch pantry items:", err);
+            const {data: items, error} = await supabase
+                .from('pantry')
+                .select("*")
+                .eq("user_id", loggedUser.id)
+                .order("ingredient_name", { ascending: true });
+            if (error) {
+                console.error("Failed to fetch your pantry ingredients: ", error);
+            } else {
+                setPantryItems(items);
+            }
+            } catch (error) {
+            console.error("Failed to fetch pantry items:", error);
             }
         }
 
