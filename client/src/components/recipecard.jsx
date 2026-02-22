@@ -3,7 +3,8 @@ import "./recipecard.css";
 export default function RecipeCard({
   title = "Recipe Name",
   cookTime = "Cook Time",
-  matchText = "ingredient match",
+  matchPercent = "",
+  missingText = "",
   ingredientsText = "ingredients",
   imageUrl = "",
   onView
@@ -12,7 +13,7 @@ export default function RecipeCard({
     <div className="recipe-card">
 
       <div className="recipe-card-image">
-        {imageUrl ? 
+        {imageUrl ?
           <img src={imageUrl} alt={title} /> : null}
       </div>
 
@@ -21,13 +22,26 @@ export default function RecipeCard({
         <div className="recipe-card-header">
           <h3>{title}</h3>
           <div className="recipe-card-time">
-            ⏱ {cookTime}
+            ⏱ Cook Time: {cookTime}
           </div>
         </div>
 
-        <div className="recipe-card-info">  
-          <div>{matchText}</div>
-          <div>{ingredientsText}</div>
+        <div className="recipe-card-info">
+          {matchPercent && (
+            <div className="recipe-card-match">
+              {matchPercent}
+            </div>
+          )}
+
+          {missingText && (
+            <div className="recipe-card-missing">
+              {missingText}
+            </div>
+          )}
+
+          <div className="recipe-card-ingredients">
+            {ingredientsText}
+          </div>
         </div>
 
         <div className="recipe-card-actions">
