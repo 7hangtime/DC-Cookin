@@ -58,7 +58,6 @@ export default function PantryAdd() {
             setHoldingList([...holdingList, ingredient]);
         }
 
-        setHoldingList([...holdingList, ingredient]);
     };
 
     const handleAddIngredient = () => {
