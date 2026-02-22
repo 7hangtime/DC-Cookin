@@ -10,9 +10,10 @@ export default function PantryAdd() {
     const [searchTerm, setSearchTerm] = useState("");
     {/* Creates list to hold ingredients ready to be added */}
     const [holdingList, setHoldingList] = useState([]);
-    const [prefer, setPrefer] = useState(0);
-    const [avoid, setAvoid] = useState(0);
+    
     {/* Preference creation function, cycles through prefer, avoid, and neutral */}
+    const [prefer, setPrefer] = useState(0);
+    const [avoid, setAvoid] = useState(0);  
     function cycle_preference(type){
         if (type === "prefer") {
             setPrefer((prev) => (prev === 1 ? 0 : 1));    
