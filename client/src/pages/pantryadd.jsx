@@ -82,7 +82,7 @@ export default function PantryAdd() {
                 ingredient_id: ingredient.id, 
                 ingredient_name: ingredient.ingredient_name,
                 Preference: 0
-            })));
+            }))).select();
         
         {/* Catches errors, if no errors, updates pantry on page */}
         if (error) console.error(error);
