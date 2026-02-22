@@ -9,7 +9,7 @@
 
   width: 500px;
 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .recipe-card-image {
@@ -66,4 +66,22 @@
 
 .recipe-card-actions button:hover {
   background: #9a8e8e;
+}
+
+.recipe-card-match {
+  font-weight: 600;
+  color: #2e7d32;
+  /* green */
+  margin-bottom: 4px;
+}
+
+.recipe-card-missing {
+  color: #c62828;
+  /* red */
+  margin-bottom: 6px;
+}
+
+.recipe-card-ingredients {
+  color: #555;
+  font-size: 0.9rem;
 }
