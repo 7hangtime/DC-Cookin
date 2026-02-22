@@ -69,6 +69,7 @@ export default function PantryAdd() {
     const handleAddIngredient = async () => {
         if (!user || holdingList.length === 0) return;
 
+        {/* Waits for supabase response then adds ingredients from holding list */}
         const { data, error } = await supabase
             .from("pantry")
             .insert(holdingList.map(ingredient => ({
@@ -78,17 +79,21 @@ export default function PantryAdd() {
                 Preference: 0
             })));
         
+        {/* Catches errors, if no errors, updates pantry on page */}
         if (error) console.error(error);
         else setPantryItems([...pantryItems, ...data]);
 
+        {/* Resets holding list */}
         setHoldingList([]);
 
     };
 
+    {/* Filters ingredients based on search term */}
     const filteredIngredients = ingredientsList.filter((ingredient) =>
         ingredient.ingredient_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    {/* Loads ingredients pulled from supabase and allows them to be highlighted when clicked */}
     const loadIngredients = () => {
         return filteredIngredients.map((ingredient) => {
             const isSelected = holdingList.some(item => item.id === ingredient.id);
@@ -157,6 +162,7 @@ return (
                         Add Ingredients
                 </h1>
 
+                {/* Search bar */}
                 <input
                     type="text"
                     placeholder="Enter an ingredient..."
@@ -173,6 +179,7 @@ return (
                     }}
                 />
 
+                {/* Add button */}
                 <button
                     onClick={() => handleAddIngredient()}
                     style={{
@@ -189,6 +196,7 @@ return (
                     +
                 </button>
 
+                {/* Ingredient list */}
                 {filteredIngredients.length > 0 ? (
                     <ul style={{
                         position: "absolute",
