@@ -6,6 +6,7 @@ export default function PantryAdd() {
     const [pantryItems, setPantryItems] = useState([]);
     const [ingredientsList, setIngredientsList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [holdingList, setHoldingList] = useState([]);
 
     useEffect(() => {
         const fetchSessionAndPantry = async () => {
@@ -38,16 +39,29 @@ export default function PantryAdd() {
         fetchSessionAndPantry();
     }, []);
 
-    const handleAddIngredient = (ingredient) => {
+    const addHoldingList = (ingredient) => {
         if (!ingredient) return;
 
-        setPantryItems([...pantryItems, {
+        const exists = holdingList.find(item => item.id === ingredient.id);
+        if (exists) return;
+
+        setHoldingList([...holdingList, ingredient]);
+    };
+
+    const handleAddIngredient = () => {
+        if (!user) return;
+
+        const newPantryItems = holdingList.map(ingredient => ({
             id: 0, 
             user_id: loggedUser.id, 
             ingredient_id: ingredient.id, 
             ingredient_name: ingredient.ingredient_name,
             Preference: 0
-        }]);
+        }));
+
+        setPantryItems([...pantryItems, ...newPantryItems]);
+
+        setHoldingList([]);
 
     };
 
@@ -108,20 +122,38 @@ return (
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{
-                        width: "100%",
-                        padding: "10px",
+                        position: "absolute",
+                        marginTop: "5px",
+                        marginLeft: "120px",
+                        padding: "10px 430px",
                         borderRadius: "8px",
                         border: "1px solid #000000",
                         marginBottom: "510px"
                     }}
                 />
 
+                <button
+                    onClick={() => handleAddIngredient()}
+                    style={{
+                        position: "absolute",
+                        marginTop: "5px",
+                        marginLeft: "1160px",
+                        padding: "10px 14px",
+                        borderRadius: "8px",
+                        border: "1px solid #000000",
+                        backgroundColor: "#f0f0f0",
+                        cursor: "pointer"
+                    }}
+                >
+                    +
+                </button>
+
                 {filteredIngredients.length > 0 ? (
                     <ul>
                         {filteredIngredients.map((ingredient) => (
                             <button
                                 key={ingredient.id}
-                                onClick={() => handleAddIngredient(ingredient)}
+                                onClick={() => addHoldingList(ingredient)}
                                 style={{
                                     padding: "8px 12px",
                                     borderRadius: "8px",
