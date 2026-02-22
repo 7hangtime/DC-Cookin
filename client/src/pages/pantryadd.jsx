@@ -4,6 +4,8 @@ import { supabase } from "../../supabase";
 export default function PantryAdd() {
     const [user, setUser] = useState(null);
     const [pantryItems, setPantryItems] = useState([]);
+    const [ingredientsList, setIngredientsList] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         const fetchSessionAndPantry = async () => {
@@ -22,11 +24,36 @@ export default function PantryAdd() {
             console.error("Failed to fetch pantry items:", err);
             }
         }
+
+        try {
+            const {data: ingredients, error} = await supabase
+                .from('ingredients')
+                .select("*")
+                .order("ingredient_name", { ascending: true });
+        } catch(err) {
+            console.error("Failed to fetch ingredients: ", err);
+        }
         };
 
         fetchSessionAndPantry();
     }, []);
 
+    const handleAddIngredient = (ingredient) => {
+        if (!ingredient) return;
+
+        setPantryItems([...pantryItems, {
+            id: 0, 
+            user_id: loggedUser.id, 
+            ingredient_id: ingredient.id, 
+            ingredient_name: ingredient.ingredient_name,
+            Preference: 0
+        }]);
+
+    };
+
+    const filteredIngredients = ingredientsList.filter((ingredient) =>
+        ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
 return (
     <div style={{
@@ -74,6 +101,46 @@ return (
                     fontSize:"16px"}}>
                         Add Ingredients
                 </h1>
+
+                <input
+                    type="text"
+                    placeholder="Enter an ingredient..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{
+                        width: "100%",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        border: "1px solid #000000",
+                        marginBottom: "510px"
+                    }}
+                />
+
+                {filteredIngredients.length > 0 ? (
+                    <ul>
+                        {filteredIngredients.map((ingredient) => (
+                            <button
+                                key={ingredient.id}
+                                onClick={() => handleAddIngredient(ingredient)}
+                                style={{
+                                    padding: "8px 12px",
+                                    borderRadius: "8px",
+                                    border: "1px solid #000000",
+                                    backgroundColor: "#f0f0f0",
+                                    cursor: "pointer"
+                                }}
+                            >
+                                {ingredient.ingredient_name}
+                            </button>
+                        ))}
+                    </ul>
+                ) : (
+                    <p style={{ 
+                        position: "absolute",
+                        marginTop: "60px", 
+                        marginLeft: "10px" 
+                    }}>Loading ingredients...</p>
+                )}
             </div>
         </div>
         {/* show ingredient(s) section */}
@@ -102,7 +169,11 @@ return (
                 ))}
             </ul>
             ) : (
-                <p>No pantry items yet.</p>
+                <p style={{ 
+                    position: "absolute",
+                    marginTop: "37px", 
+                    marginLeft: "1px"
+                }}>No pantry items yet.</p>
             )}
             </div>
         </div>  
