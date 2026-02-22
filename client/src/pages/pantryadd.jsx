@@ -30,28 +30,33 @@ export default function PantryAdd() {
         }
 
         try {
+            {/* Fetches ingredients from supabase */}
             const {data: ingredients, error} = await supabase
                 .from('ingredients')
                 .select("*")
                 .order("ingredient_name", { ascending: true });
 
+            {/* Prints error if failed, else put ingredients into list */}
             if (error) {
-                console.error("Failed to fetch ingredients: ", err);
+                console.error("Failed to fetch ingredients: ", error);
             } else {
                 setIngredientsList(ingredients);
             }
-        } catch(err) {
-            console.error("Failed to fetch ingredients: ", err);
+        } catch(error) {
+            console.error("Failed to fetch ingredients: ", error);
         }
         };
 
         fetchSessionAndPantry();
     }, []);
 
+    {/* Adds ingredients to holding list*/}
     const addHoldingList = (ingredient) => {
         if (!ingredient) return;
 
+        {/* Checks to see if ingredient is already in holding list */}
         const exists = holdingList.find(item => item.id === ingredient.id);
+        {/* If it exists, it removes it, else, it adds it */}
         if (exists) {
             setHoldingList(holdingList.filter(item => item.id !== ingredient.id));
         } else {
@@ -60,18 +65,21 @@ export default function PantryAdd() {
 
     };
 
-    const handleAddIngredient = () => {
-        if (!user) return;
+    {/* Adds ingredients in holding list to user's pantry */}
+    const handleAddIngredient = async () => {
+        if (!user || holdingList.length === 0) return;
 
-        const newPantryItems = holdingList.map(ingredient => ({
-            id: 0, 
-            user_id: user.id, 
-            ingredient_id: ingredient.id, 
-            ingredient_name: ingredient.ingredient_name,
-            Preference: 0
-        }));
-
-        setPantryItems([...pantryItems, ...newPantryItems]);
+        const { data, error } = await supabase
+            .from("pantry")
+            .insert(holdingList.map(ingredient => ({
+                user_id: user.id, 
+                ingredient_id: ingredient.id, 
+                ingredient_name: ingredient.ingredient_name,
+                Preference: 0
+            })));
+        
+        if (error) console.error(error);
+        else setPantryItems([...pantryItems, ...data]);
 
         setHoldingList([]);
 
@@ -182,7 +190,11 @@ return (
                 </button>
 
                 {filteredIngredients.length > 0 ? (
-                    <ul>
+                    <ul style={{
+                        position: "absolute",
+                        marginTop: "60px",
+                        marginLeft: "10px"
+                    }}>
                         {loadIngredients()};
                     </ul>
                 ) : (
