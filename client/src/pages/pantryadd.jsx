@@ -4,8 +4,11 @@ import { supabase } from "../../supabase";
 export default function PantryAdd() {
     const [user, setUser] = useState(null);
     const [pantryItems, setPantryItems] = useState([]);
+    {/* Creates list to hold ingredients from supabase */}
     const [ingredientsList, setIngredientsList] = useState([]);
+    {/* Creates object to hold search term */}
     const [searchTerm, setSearchTerm] = useState("");
+    {/* Creates list to hold ingredients ready to be added */}
     const [holdingList, setHoldingList] = useState([]);
 
     useEffect(() => {
@@ -31,6 +34,12 @@ export default function PantryAdd() {
                 .from('ingredients')
                 .select("*")
                 .order("ingredient_name", { ascending: true });
+
+            if (error) {
+                console.error("Failed to fetch ingredients: ", err);
+            } else {
+                setIngredientsList(ingredients);
+            }
         } catch(err) {
             console.error("Failed to fetch ingredients: ", err);
         }
@@ -57,7 +66,7 @@ export default function PantryAdd() {
 
         const newPantryItems = holdingList.map(ingredient => ({
             id: 0, 
-            user_id: loggedUser.id, 
+            user_id: user.id, 
             ingredient_id: ingredient.id, 
             ingredient_name: ingredient.ingredient_name,
             Preference: 0
@@ -70,7 +79,7 @@ export default function PantryAdd() {
     };
 
     const filteredIngredients = ingredientsList.filter((ingredient) =>
-        ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
+        ingredient.ingredient_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const loadIngredients = () => {
