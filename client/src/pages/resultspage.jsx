@@ -55,59 +55,69 @@ export default function ResultsPage() {
 
   return (
     <div style={{ padding: 40 }}>
-      <h1>Results</h1>
+      <div className="results-shell">
+        {/* Blue top header band */}
+        <div className="results-shell-header">
+          <div className="results-shell-title-row">
+            <span className="results-shell-icon" aria-hidden="true">🥑</span>
+            <h2 className="results-shell-title">Recipes for Your Pantry</h2>
+          </div>
 
-      <p>
-        <strong>Your pantry:</strong>{" "}
-        {pantryNames.length ? pantryNames.join(", ") : "No ingredients found"}
-      </p>
-
-      <h2 className="section-title exact" style={{ marginTop: 24 }}>
-        Exact Matches
-      </h2>
-
-      {matches.exactMatches.length === 0 ? (
-        <p>No exact matches yet.</p>
-      ) : (
-        <div className={`results-grid ${exactSingle ? "single" : ""}`}>
-          {matches.exactMatches.map((r) => (
-            <RecipeCard
-              key={r.id}
-              title={r.name}
-              cookTime={r.timeMinutes ? `${r.timeMinutes} min` : ""}
-              variant="exact"
-              ingredientsText={(r.ingredients_with_measurements?.slice(0, 3) || r.ingredients || []).join(", ")}
-              imageUrl={r.image_url || ""}
-              onView={() => navigate(`/recipe/${r.id}`, { state: { recipe: r } })}
-            />
-          ))}
+          <div className="results-shell-subtitle">
+            {matches.exactMatches.length} exact matches • {matches.partialMatches.length} partial matches
+          </div>
         </div>
-      )}
 
-      <h2 className="section-title partial" style={{ marginTop: 24 }}>
-        Close Matches
-      </h2>
+        {/* Body */}
+        <div className="results-shell-body">
+          <h3 className="section-title exact" style={{ marginTop: 0 }}>
+            Exact Matches
+          </h3>
 
-      {matches.partialMatches.length === 0 ? (
-        <p>No partial matches yet.</p>
-      ) : (
-        <div className={`results-grid ${partialSingle ? "single" : ""}`}>
-          {matches.partialMatches.map(({ recipe, missing, matchPct }) => (
-            <RecipeCard
-              key={recipe.id}
-              title={recipe.name}
-              cookTime={recipe.timeMinutes ? `${recipe.timeMinutes} min` : ""}
-              variant="partial"
-              missingText={`Missing: ${missing.join(", ")}`}
-              matchPercent={`Match: ${matchPct}%`}
-              matchPctNumber={matchPct}
-              ingredientsText={(recipe.ingredients_with_measurements?.slice(0, 3) || recipe.ingredients || []).join(", ")}
-              imageUrl={recipe.image_url || ""}
-              onView={() => navigate(`/recipe/${recipe.id}`, { state: { recipe } })}
-            />
-          ))}
+          {matches.exactMatches.length === 0 ? (
+            <p>No exact matches yet.</p>
+          ) : (
+            <div className={`results-grid ${exactSingle ? "single" : ""}`}>
+              {matches.exactMatches.map((r) => (
+                <RecipeCard
+                  key={r.id}
+                  title={r.name}
+                  cookTime={r.timeMinutes ? `${r.timeMinutes} min` : ""}
+                  variant="exact"
+                  ingredientsText={(r.ingredients_with_measurements?.slice(0, 3) || r.ingredients || []).join(", ")}
+                  imageUrl={r.image_url || ""}
+                  onView={() => navigate(`/recipe/${r.id}`, { state: { recipe: r } })}
+                />
+              ))}
+            </div>
+          )}
+
+          <h3 className="section-title partial" style={{ marginTop: 22 }}>
+            Missing Ingredients
+          </h3>
+
+          {matches.partialMatches.length === 0 ? (
+            <p>No partial matches yet.</p>
+          ) : (
+            <div className={`results-grid ${partialSingle ? "single" : ""}`}>
+              {matches.partialMatches.map(({ recipe, missing, matchPct }) => (
+                <RecipeCard
+                  key={recipe.id}
+                  title={recipe.name}
+                  cookTime={recipe.timeMinutes ? `${recipe.timeMinutes} min` : ""}
+                  variant="partial"
+                  missingText={`Missing: ${missing.join(", ")}`}
+                  matchPercent={`Match: ${matchPct}%`}
+                  matchPctNumber={matchPct}
+                  ingredientsText={(recipe.ingredients_with_measurements?.slice(0, 3) || recipe.ingredients || []).join(", ")}
+                  imageUrl={recipe.image_url || ""}
+                  onView={() => navigate(`/recipe/${recipe.id}`, { state: { recipe } })}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -211,3 +211,55 @@
 .section-title.partial {
   color: #e65100;
 }
+
+/* === Results Page Shell (big rounded container with blue header) === */
+
+.results-shell {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.10);
+}
+
+.results-shell-header {
+  padding: 18px 22px;
+  color: white;
+  background: linear-gradient(90deg, #1f6feb, #20b7c7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-height: 90px;
+}
+
+.results-shell-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.results-shell-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.results-shell-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.results-shell-subtitle {
+  font-size: 14px;
+  opacity: 0.95;
+}
+
+.results-shell-body {
+  padding: 18px 18px 22px;
+}
+
+.results-grid.single {
+  grid-template-columns: 1fr;
+  max-width: 780px;
+}
