@@ -9,12 +9,14 @@ export default function Pantry() {
     const fetchSessionAndPantry = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
+
+        
         const loggedUser = data.session.user; 
         setUser(loggedUser);
 
         try {
           const res = await fetch(
-            `http://localhost:3000/api/pantry?userId=${loggedUser.id}`
+            `http://localhost:3001/api/pantry?userId=${loggedUser.id}`
           );
           const items = await res.json();
           setPantryItems(items); 
@@ -26,27 +28,6 @@ export default function Pantry() {
 
     fetchSessionAndPantry();
   }, []);
-// Delete an ingredient from Supabase and update front-end
-  const handleDelete = async (ingredientId) => {
-    if (!user) return;
-
-    try {
-      const { error } = await supabase
-        .from("pantry")
-        .delete()
-        .eq("id", ingredientId)
-        .eq("user_id", user.id);
-
-      if (error) {
-        console.error("Failed to delete ingredient:", error);
-      } else {
-        // Remove ingredient from front-end immediately
-        setPantryItems(pantryItems.filter(item => item.id !== ingredientId));
-      }
-    } catch (err) {
-      console.error("Error deleting ingredient:", err);
-    }
-  };
 
     
 return (

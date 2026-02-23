@@ -4,17 +4,20 @@ import { supabase } from "../../supabase";
 export default function Pantry() {
   const [user, setUser] = useState(null);
   const [pantryItems, setPantryItems] = useState([]);
+  const [newIngredient, setNewIngredient] = useState(""); // <-- added this line
 
   useEffect(() => {
     const fetchSessionAndPantry = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
+
+        
         const loggedUser = data.session.user; 
         setUser(loggedUser);
 
         try {
           const res = await fetch(
-            `http://localhost:3000/api/pantry?userId=${loggedUser.id}`
+            `http://localhost:3001/api/pantry?userId=${loggedUser.id}`
           );
           const items = await res.json();
           setPantryItems(items); 
@@ -26,31 +29,96 @@ export default function Pantry() {
 
     fetchSessionAndPantry();
   }, []);
-// Delete an ingredient from Supabase and update front-end
-  const handleDelete = async (ingredientId) => {
-    if (!user) return;
+
+  // Add a new ingredient
+  const handleAdd = async () => {
+    if (!newIngredient.trim() || !user) return;
 
     try {
-      const { error } = await supabase
-        .from("pantry")
-        .delete()
-        .eq("id", ingredientId)
-        .eq("user_id", user.id);
-
-      if (error) {
-        console.error("Failed to delete ingredient:", error);
-      } else {
-        // Remove ingredient from front-end immediately
-        setPantryItems(pantryItems.filter(item => item.id !== ingredientId));
+      const res = await fetch("http://localhost:3001/api/pantry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          ingredient_name: newIngredient,
+        }),
+      });
+      if (res.ok) {
+        setNewIngredient("");
+        // Refresh the pantry after adding
+        const updated = await fetch(
+          `http://localhost:3001/api/pantry?userId=${user.id}`
+        );
+        const items = await updated.json();
+        setPantryItems(items);
       }
     } catch (err) {
-      console.error("Error deleting ingredient:", err);
+      console.error("Failed to add ingredient:", err);
     }
   };
 
+  // Delete an ingredient
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/pantry/${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        // Refresh the pantry after deletion
+        const updated = await fetch(
+          `http://localhost:3001/api/pantry?userId=${user.id}`
+        );
+        const items = await updated.json();
+        setPantryItems(items);
+      }
+    } catch (err) {
+      console.error("Failed to delete ingredient:", err);
+    }
+  };
+
+  return (
+    <div style={{ padding: "40px", minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
+      <h1>My Pantry</h1>
+      <p>{user ? `Logged in as: ${user.email}` : "Not logged in"}</p>
+
+      {/* Add Ingredient Section */}
+      <div style={{ marginBottom: "20px" }}>
+        <input
+          type="text"
+          value={newIngredient}
+          onChange={(e) => setNewIngredient(e.target.value)}
+          placeholder="New ingredient"
+          style={{ padding: "8px", marginRight: "8px" }}
+        />
+        <button onClick={handleAdd} style={{ padding: "8px" }}>
+          Add
+        </button>
+      </div>
+
+      {/* Pantry List */}
+      <div style={{ backgroundColor: "#fff", padding: "20px", borderRadius: "10px" }}>
+        {pantryItems.length > 0 ? (
+          <ul>
+            {pantryItems.map((item) => (
+              <li key={item.id} style={{ marginBottom: "8px" }}>
+                {item.ingredient_name}{" "}
+                <button onClick={() => handleDelete(item.id)} style={{ marginLeft: "10px" }}>
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No pantry items yet.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
     
 return (
-    <div style={{padding: "40px", position: "relative", minHeight: "100vh"}}>
+    <div style={{padding: "40px", position:"relative", minHeight:"100vh"}}>
       <div style={{...styles.container, backgroundColor:"#344d9e", backgroundImage:"linear-gradient(135deg, #0010f7 0%, #75a6ce 100%)"}}>
         <div style={styles.header}>
         <h1 style={{...styles.title, color:"#ffffff", position:"relative", top:"10px", left:"-750px"}}>My Pantry</h1>
@@ -71,7 +139,7 @@ return (
               ))}
             </ul>
             ) : (
-              <p>No pantry items yet.              </p>
+              <p>No pantry items yet.</p>
             )}
             </p>
       </div>  
