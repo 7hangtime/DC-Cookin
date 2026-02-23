@@ -26,27 +26,6 @@ export default function Pantry() {
 
     fetchSessionAndPantry();
   }, []);
-// Delete an ingredient from Supabase and update front-end
-  const handleDelete = async (ingredientId) => {
-    if (!user) return;
-
-    try {
-      const { error } = await supabase
-        .from("pantry")
-        .delete()
-        .eq("id", ingredientId)
-        .eq("user_id", user.id);
-
-      if (error) {
-        console.error("Failed to delete ingredient:", error);
-      } else {
-        // Remove ingredient from front-end immediately
-        setPantryItems(pantryItems.filter(item => item.id !== ingredientId));
-      }
-    } catch (err) {
-      console.error("Error deleting ingredient:", err);
-    }
-  };
 
     
 return (
