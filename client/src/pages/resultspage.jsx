@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import RecipeCard from "../components/recipecard.jsx";
 import { fetchMyPantryIngredientNames } from "../api/pantryApi";
+import { useNavigate } from "react-router-dom";
+
 
 export default function ResultsPage() {
   const [pantryNames, setPantryNames] = useState([]);
   const [matches, setMatches] = useState({ exactMatches: [], partialMatches: [] });
   const [status, setStatus] = useState("loading"); // loading | success | error
   const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     async function load() {
@@ -74,7 +78,7 @@ export default function ResultsPage() {
               (r.ingredients_with_measurements?.slice(0, 3) || r.ingredients || []).join(", ")
             }
             imageUrl={r.image_url || ""}
-            onView={() => console.log("view", r.id)}
+            onView={() => navigate(`/recipe/${r.id}`, { state: { recipe: r } })}
           />
         ))
       )}
@@ -94,7 +98,7 @@ export default function ResultsPage() {
               (recipe.ingredients_with_measurements?.slice(0, 3) || recipe.ingredients || []).join(", ")
             }
             imageUrl={recipe.image_url || ""}
-            onView={() => console.log("view", recipe.id)}
+            onView={() => navigate(`/recipe/${recipe.id}`, { state: { recipe } })}
           />
         ))
       )}

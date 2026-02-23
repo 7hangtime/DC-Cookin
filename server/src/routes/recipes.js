@@ -19,3 +19,12 @@ export default function recipesRouter(recipesData) {
 
     return router;
 }
+
+router.get("/:id", (req, res) => {
+    const { id } = req.params;
+
+    const recipe = recipesData.find(r => r.id === id);
+    if (!recipe) return res.status(404).json({ error: "Recipe not found" });
+
+    return res.json(recipe);
+});
