@@ -22,7 +22,7 @@ export default function ResultsPage() {
         const res = await fetch("/api/recipes/matches", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ingredients: names, maxMissing: 2 })
+          body: JSON.stringify({ ingredients: names, maxMissing: 4 })
         });
 
         const data = await res.json();
