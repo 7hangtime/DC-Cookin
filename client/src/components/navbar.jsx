@@ -15,7 +15,7 @@ export default function Navbar() {
                         Pantry
                     </NavLink>
                     <NavLink to="/results" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
-                        My Recipies
+                        My Recipes
                     </NavLink>
                     <NavLink to="/pantry-add" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
                         Add Ingredients
