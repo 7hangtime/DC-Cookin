@@ -11,21 +11,22 @@ export default function PantryAdd() {
     {/* Creates list to hold ingredients ready to be added */}
     const [holdingList, setHoldingList] = useState([]);
     
-    {/* Preference creation function, cycles through prefer, avoid, and neutral */}
-    const [prefer, setPrefer] = useState(0);
-    const [avoid, setAvoid] = useState(0);  
+    {/* Preference creation function, cycles through prefer, avoid, and neutral */ }
+    let prefer = false;
+    let avoid = false;
     function cycle_preference(type){
         if (type === "prefer") {
-            setPrefer((prev) => (prev === 1 ? 0 : 1));    
+            prefer = !prefer;    
                 // backgroundColor = '#83e67b'
             
             
 
         } else if (type === "avoid") {
-            setAvoid((prev) => (prev === 1 ? 0 : 1));
-            // backgroundColor = '#e65353';
+            avoid = !avoid;
+            // backgroundColor prefer = '#e65353';
         }
     };
+
     function create_preference(prefer, avoid){
         if (prefer == 1 && avoid == 0)
             return 1;
@@ -46,6 +47,7 @@ export default function PantryAdd() {
             this.preference = -1;
         }
     };
+    const colors= ["#ffffff", '#83e67b', '#e65353'] // colors for pantry items background
     
 
     useEffect(() => {
@@ -234,7 +236,7 @@ return (
                         padding: "10px 10px",
                         borderRadius: "8px",
                         border: "1px solid #000000",
-                        backgroundColor: "#ffffff",
+                        backgroundColor: prefer? "#83e67b":"#ffffff",
                         cursor: "pointer"
                     }}
                 >
@@ -256,7 +258,7 @@ return (
                         padding: "10px 10px",
                         borderRadius: "8px",
                         border: "1px solid #000000",
-                        backgroundColor: "#ffffff",
+                        backgroundColor:avoid?  "#e65353":"#ffffff",
                         cursor: "pointer"
                     }}
                 >
@@ -298,7 +300,7 @@ return (
                 )}
             </div>
         </div>
-        {/* show ingredient(s) section */}
+        {/* show ingredient(s) section  (pantry already added)*/}
         <div style={{
             ...styles.container, 
             backgroundColor:"#ffffff", 
@@ -320,7 +322,13 @@ return (
             {pantryItems.length > 0 ? (
             <ul>
                 {pantryItems.map((item) => (
-                    <li key={item.id}>{item.ingredient_name}</li>
+                    <button
+                        key={item.id}
+                        onClick={() => update_preference()}>
+                        style={{ backgroundColor: color[item.Preference] }}
+                        {item.ingredientName}
+                        
+                     </button>
                 ))}
             </ul>
             ) : (
