@@ -19,10 +19,10 @@ export default function ResultsPage() {
         const names = await fetchMyPantryIngredientNames();
         setPantryNames(names);
 
-        const res = await fetch("/api/recipes/matches", {
+        const res = await fetch("http://localhost:3000/api/recipes/matches", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ingredients: names, maxMissing: 4 })
+          body: JSON.stringify({ ingredients: names, maxMissing: 4 }),
         });
 
         const data = await res.json();

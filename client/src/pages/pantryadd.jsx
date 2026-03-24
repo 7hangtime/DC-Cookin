@@ -115,14 +115,18 @@ export default function PantryAdd() {
         if (!user || holdingList.length === 0) return;
 
         {/* Waits for supabase response then adds ingredients from holding list */}
-        const { data, error } = await supabase
-            .from("pantry")
-            .insert(holdingList.map(ingredient => ({
-                user_id: user.id, 
-                ingredient_id: ingredient.id, 
-                ingredient_name: ingredient.ingredient_name,
-                Preference: create_preference(prefer, avoid)
-            }))).select();
+       const { data, error } = await supabase
+         .from("pantry")
+         .upsert(
+           holdingList.map((ingredient) => ({
+             user_id: user.id,
+             ingredient_id: ingredient.id,
+             ingredient_name: ingredient.ingredient_name,
+             Preference: create_preference(prefer, avoid),
+           })),
+           { onConflict: ["user_id", "ingredient_id"] }
+         )
+         .select();
         
         {/* Catches errors, if no errors, updates pantry on page */}
         if (error) console.error(error);
