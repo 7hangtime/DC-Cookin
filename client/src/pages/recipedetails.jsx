@@ -21,7 +21,9 @@ export default function RecipeDetails() {
   useEffect(() => {
     async function fetchRecipe() {
       try {
-        const res = await fetch(`${API_BASE}/recipes/${id}`);
+        const res = await fetch(
+          `http://localhost:3000${API_BASE}/recipes/${id}`
+        );
         if (!res.ok) throw new Error("Recipe not found");
         const data = await res.json();
         setRecipe(data);
