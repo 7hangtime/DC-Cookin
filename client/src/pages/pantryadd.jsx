@@ -156,6 +156,20 @@ export default function PantryAdd() {
             );
         });
     };
+    {/* deletes pantry item from supabase */}
+    const handleDelete = async (ingredientId) => {
+        const { error } = await supabase
+            .from("pantry")
+            .delete()
+            .eq("user_id", user.id)
+            .eq("ingredient_id", ingredientId);
+        if (error) {
+            console.error("Failed to delete ingredient: ", error);
+        }
+        // Update front-end immediately
+        setPantryItems(pantryItems.filter(item => item.ingredient_id !== ingredientId));
+    };
+        
 
     {/* Loads pantry items pulled from supabase */}
     const loadpantry = () => {
@@ -180,7 +194,8 @@ export default function PantryAdd() {
                         </button>
                         <button
                             onClick={async () => {
-                                handleDelete(item.id);
+                                handleDelete(item.ingredient_id);
+                                
                             }}
                             style={{
                                 color: "#ff0000",
