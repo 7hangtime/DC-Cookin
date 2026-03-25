@@ -12,18 +12,21 @@ export default function PantryAdd() {
     const [holdingList, setHoldingList] = useState([]);
     
     {/* Preference creation function, cycles through prefer, avoid, and neutral */ }
-    let prefer = false;
-    let avoid = false;
+    const [test, setTest] = useState(false); // state variable to trigger re-render
+    const [prefer, setPrefer] = useState(false);
+    const [avoid, setAvoid] = useState(false); 
+
     function cycle_preference(type){
         if (type === "prefer") {
-            prefer = !prefer;    
+            setPrefer(!prefer);
                 // backgroundColor = '#83e67b'
             
-            
-
         } else if (type === "avoid") {
-            avoid = !avoid;
+            setAvoid(!avoid);
             // backgroundColor prefer = '#e65353';
+        }else {
+            setPrefer(false);
+            setAvoid(false);
         }
     };
 
@@ -35,19 +38,8 @@ export default function PantryAdd() {
         else
             return 0;
     };
-    function update_preference(){
-        cur = this.preferece;
-        if(cur == -1){
-            this.preference = 0;
-        }
-        else if(cur == 0){
-            this.preference = 1;
-        }
-        else if(cur == 1){
-            this.preference = -1;
-        }
-    };
-    const colors= ["#ffffff", '#83e67b', '#e65353'] // colors for pantry items background
+    
+    const colors= ['#e65353', "#9c9c9c", '#83e67b'] // colors for pantry items background
     
 
     useEffect(() => {
@@ -134,6 +126,7 @@ export default function PantryAdd() {
 
         {/* Resets holding list */}
         setHoldingList([]);
+        cycle_preference("reset");
 
     };
 
@@ -163,6 +156,73 @@ export default function PantryAdd() {
             );
         });
     };
+
+    {/* Loads pantry items pulled from supabase */}
+    const loadpantry = () => {
+        return pantryItems.map((item) => (
+                    // shows preference as number
+                    // <li key={item.id}>{item.ingredient_name} - Preference: {item.Preference}</li>
+                    
+                    // show preference as color instead of number
+                    <li 
+                    key={item.id} >
+                        <button
+                            onClick={() => update_preference(item.id)}
+                            style={{
+                                backgroundColor: colors[item.Preference + 1],
+                                padding: "8px 12px",
+                                borderRadius: "8px",
+                                border: "1px solid #000000",
+                                cursor: "pointer" 
+                            }}
+                            >   
+                        {item.ingredient_name} 
+                        </button>
+                        <button
+                            onClick={async () => {
+                                handleDelete(item.id);
+                            }}
+                            style={{
+                                color: "#ff0000",
+                                padding: "8px 12px",
+                                borderRadius: "8px",
+                                backgroundColor: "#ffffff00",
+                                border: "1px solid #ffffff00",
+                                cursor: "pointer",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            X
+                        </button>
+                    </li>
+
+                    
+                ))
+    };
+
+    {/* updates preference of ingredient in pantry */}
+    const update_preference = async (itemId) => { 
+        const item = pantryItems.find(item => item.id === itemId);
+        if (!item) return;
+        let cur = item.Preference;
+        if(cur == -1){
+            item.Preference = 0;
+        }
+        else if(cur == 0){
+            item.Preference = 1;
+        }
+        else if(cur == 1){
+            item.Preference = -1;
+        }
+        const { data, error } = await supabase
+            .from("pantry")
+            .update({ Preference: item.Preference })
+            .eq("id", itemId)
+            .eq("user_id", user.id)    
+        setTest(!test); // trigger re-render
+
+        
+    }
 
 return (
     <div style={{
@@ -230,7 +290,7 @@ return (
 
                 {/* prefer button */}
                 <h1 style={{color:"black", position: "absolute", marginTop: "2px", marginLeft: "1082px", padding: "1px 1px", borderRadius: "8px", fontSize:"12px"}}>Prefer</h1>
-                <checkbox
+                <button
 
                     onClick={() => cycle_preference("prefer")}
                     style={{
@@ -240,17 +300,17 @@ return (
                         padding: "10px 10px",
                         borderRadius: "8px",
                         border: "1px solid #000000",
-                        backgroundColor: prefer? "#83e67b":"#ffffff",
+                        backgroundColor: prefer ? "#83e67b":"#ffffff",
                         cursor: "pointer"
                     }}
                 >
                     
-                </checkbox>
+                </button>
                 
 
                 {/* avoid button */}
                 <h1 style={{color:"black", position: "absolute", marginTop: "2px", marginLeft: "1125px", padding: "1px 1px", borderRadius: "8px", fontSize:"12px"}}>Avoid</h1>
-                <checkbox 
+                <button 
                     type="avoid"
                     onClick={() => cycle_preference("avoid")}
                     style={{
@@ -262,11 +322,11 @@ return (
                         padding: "10px 10px",
                         borderRadius: "8px",
                         border: "1px solid #000000",
-                        backgroundColor:avoid?  "#e65353":"#ffffff",
+                        backgroundColor:avoid ?  "#e65353":"#ffffff",
                         cursor: "pointer"
                     }}
                 >
-                </checkbox>
+                </button>
 
 
                 {/* Add button */}
@@ -325,15 +385,7 @@ return (
                 </h1>
             {pantryItems.length > 0 ? (
             <ul>
-                {pantryItems.map((item) => (
-                    <button
-                        key={item.id}
-                        onClick={() => update_preference()}>
-                        style={{ backgroundColor: color[item.Preference] }}
-                        {item.ingredientName}
-                        
-                     </button>
-                ))}
+                {loadpantry()};
             </ul>
             ) : (
                 <p style={{ 
@@ -347,7 +399,7 @@ return (
         </div>
     </div>
 );
-
+                   
 }
 
 
