@@ -179,7 +179,14 @@ export default function PantryAdd() {
                     
                     // show preference as color instead of number
                     <li 
-                    key={item.id} >
+                    key={item.id}
+                        style={{
+                            display: "flex",
+                            alignItems: "center", 
+                            justifyContent: "space-between",
+                            padding: "4px 4px",
+
+                        }} >
                         <button
                             onClick={() => update_preference(item.id)}
                             style={{
@@ -399,8 +406,18 @@ return (
                         Your Pantry
                 </h1>
             {pantryItems.length > 0 ? (
-            <ul>
-                {loadpantry()};
+            <ul
+            // this is the styling for the pantry items list, it is a grid with tight groupings and no bullet points  
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(5, 1fr)",
+                rowGap: "2px",
+                columnGap: "0px",
+                alignContent: "start",
+                padding: "0",
+                listStyle: "none",
+              }}>
+                {loadpantry()}
             </ul>
             ) : (
                 <p style={{ 
