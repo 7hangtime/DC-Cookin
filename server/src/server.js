@@ -9,7 +9,7 @@ const recipes = JSON.parse(
 );
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 const environment = process.env.NODE_ENV
 
 app.use(cors());
