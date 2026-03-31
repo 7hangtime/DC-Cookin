@@ -156,7 +156,7 @@ export default function Pantry() {
     
 return (
     <div style={{padding: "40px", position: "relative", minHeight: "100vh"}}>
-      <div style={{...styles.container, backgroundColor:"#344d9e", backgroundImage:"linear-gradient(135deg, #0010f7 0%, #75a6ce 100%)"}}>
+      <div style={{...styles.container, backgroundImage:"linear-gradient(90deg, #1f6feb, #20b7c7)"}}>
         <div style={styles.header}>
         <h1 style={{...styles.title, color:"#ffffff", position:"relative", top:"10px", left:"-750px"}}>My Pantry</h1>
         <p style={{...styles.subtitle, position:"absolute", top:"50px", right:"60px", color:"#ffffff", fontFamily:"Arial, sans-serif"}}>{user ? <p>Logged in as: {user.email}</p> : <p>Not logged in</p>}</p>

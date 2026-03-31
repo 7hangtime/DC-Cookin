@@ -254,8 +254,8 @@ return (
         }}>
         <div style={{
             ...styles.container, 
-            backgroundColor:"#344d9e", 
-            backgroundImage:"linear-gradient(135deg, #0010f7 0%, #75a6ce 100%)"
+            // backgroundColor:"#344d9e", 
+            backgroundImage:"linear-gradient(90deg, #1f6feb, #20b7c7)"
             }}>
         <div style={styles.header}>
         <h1 style={{
