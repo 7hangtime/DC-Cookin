@@ -255,7 +255,8 @@ return (
         <div style={{
             ...styles.container, 
             // backgroundColor:"#344d9e", 
-            backgroundImage:"linear-gradient(90deg, #1f6feb, #20b7c7)"
+            backgroundImage: "linear-gradient(90deg, #1f6feb, #20b7c7)",
+            paddingBottom: "30px"
             }}>
         <div style={styles.header}>
         <h1 style={{
@@ -278,7 +279,7 @@ return (
         <div style={styles.header} >  
             <div style={{
                 ...styles.container, 
-                backgroundColor:"#cac7c7e0", 
+                backgroundColor:"#ffffff", 
                 borderRadius:"15px", 
                 padding:"10px", 
                 width:"1200px",
@@ -288,7 +289,7 @@ return (
                 left:"150px" }}>
                 <h1 style={{
                     ...styles.title, 
-                    color:"#ee0000", 
+                    color:"#1e88e5", 
                     fontSize:"16px"}}>
                         Add Ingredients
                 </h1>
@@ -401,7 +402,7 @@ return (
             left:"150px" }}>
             <h1 style={{
                     ...styles.title, 
-                    color:"#ee0000", 
+                    color:"#1e88e5", 
                     fontSize:"16px"}}>
                         Your Pantry
                 </h1>

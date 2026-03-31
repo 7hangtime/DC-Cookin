@@ -156,11 +156,11 @@ export default function Pantry() {
     
 return (
     <div style={{padding: "40px", position: "relative", minHeight: "100vh"}}>
-      <div style={{...styles.container, backgroundImage:"linear-gradient(90deg, #1f6feb, #20b7c7)"}}>
+      <div style={{...styles.container,paddingBottom:"30px" , backgroundImage:"linear-gradient(90deg, #1f6feb, #20b7c7)"}}>
         <div style={styles.header}>
         <h1 style={{...styles.title, color:"#ffffff", position:"relative", top:"10px", left:"-750px"}}>My Pantry</h1>
         <p style={{...styles.subtitle, position:"absolute", top:"50px", right:"60px", color:"#ffffff", fontFamily:"Arial, sans-serif"}}>{user ? <p>Logged in as: {user.email}</p> : <p>Not logged in</p>}</p>
-        <button style={{...styles.button, position:"absolute", top:"150px", right:"60px", width:"150px", backgroundColor:"#00ff62", color:"#000000"}} onClick={() => window.location.href = "/pantry-add"}>Add Ingredient</button>
+        {/* <button style={{...styles.button, position:"absolute", top:"150px", right:"60px", width:"150px", backgroundColor:"#00ff62", color:"#000000"}} onClick={() => window.location.href = "/pantry-add"}>Add Ingredient</button> */}
         
            {/* show pantry  */}
         <div style={{
@@ -177,7 +177,7 @@ return (
             left:"150px" }}>
             <h1 style={{
                     ...styles.title, 
-                    color:"#ee0000", 
+                    color:"#1e88e5", 
                     fontSize:"16px"}}>
                         Your Pantry
                 </h1>
@@ -252,7 +252,7 @@ const styles = {
   },
   container: {
     display: "flex",
-    height: "70vh",
+    minHeight: "70vh",
     borderRadius: "10px",
     overflow: "hidden",
     boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
