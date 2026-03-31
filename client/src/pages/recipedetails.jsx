@@ -22,7 +22,7 @@ export default function RecipeDetails() {
     async function fetchRecipe() {
       try {
         const res = await fetch(
-          `http://localhost:3000${API_BASE}/recipes/${id}`
+          `http://localhost:3001${API_BASE}/recipes/${id}`
         );
         if (!res.ok) throw new Error("Recipe not found");
         const data = await res.json();
@@ -97,7 +97,7 @@ export default function RecipeDetails() {
 const styles = {
   page: { // This block is used for the overall page layout.
     minHeight: "100vh",
-    backgroundColor: "#f5f0e8",
+    backgroundColor: "#f7c6a5e1", //"#ffe5d4" "#f7c6a5e1" "#eeaf9b"
     padding: "2rem",
     fontFamily: "'Georgia', serif",
     color: "#2c2c2c",
@@ -120,7 +120,7 @@ const styles = {
     border: "none",
     fontSize: "1rem",
     cursor: "pointer",
-    color: "#7a4f2e",
+    color: "#7a402e",
     fontFamily: "Georgia, serif",
     marginBottom: "1.5rem",
     padding: "0",
@@ -129,14 +129,14 @@ const styles = {
   card: { // This block is used for the recipe card.
     backgroundColor: "#fffdf8",
     borderRadius: "12px",
-    boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+    boxShadow: "0 4px 24px rgba(245, 164, 164, 0.73)",
     maxWidth: "720px",
     width: "100%",
     overflow: "hidden",
   },
   header: { // This block is used for the header of the recipe card.
-    backgroundColor: "#7a4f2e",
-    padding: "2.5rem 2rem",
+    backgroundColor: "#c07942", //  "#7a4f2e" "#c07942" "#c57373"
+    padding: "2.5rem 2rem", 
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
