@@ -1,0 +1,112 @@
+import { useEffect, useMemo, useState } from "react";
+import RecipeCard from "../components/recipecard.jsx";
+import { useNavigate } from "react-router-dom";
+
+export default function AllRecipesPage() {
+    const [recipes, setRecipes] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [status, setStatus] = useState("loading");
+    const [errorMsg, setErrorMsg] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        async function loadRecipes() {
+            try {
+                setStatus("loading");
+
+                const res = await fetch("http://localhost:3001/api/recipes");
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data?.error || "Failed to fetch recipes");
+                }
+
+                setRecipes(data);
+                setStatus("success");
+            } catch (err) {
+                setErrorMsg(err?.message || "Something went wrong");
+                setStatus("error");
+            }
+        }
+
+        loadRecipes();
+    }, []);
+
+    const filteredRecipes = useMemo(() => {
+        const term = searchTerm.trim().toLowerCase();
+
+        if (!term) return recipes;
+
+        return recipes.filter((recipe) => {
+            const name = recipe.name?.toLowerCase() || "";
+            const ingredients =
+                recipe.ingredients_with_measurements?.join(" ").toLowerCase() ||
+                recipe.ingredients?.join(" ").toLowerCase() ||
+                "";
+
+            return name.includes(term) || ingredients.includes(term);
+        });
+    }, [recipes, searchTerm]);
+
+    if (status === "loading") {
+        return <div style={{ padding: 40 }}>Loading recipes...</div>;
+    }
+
+    if (status === "error") {
+        return (
+            <div style={{ padding: 40 }}>
+                <h2>Error</h2>
+                <p style={{ color: "crimson" }}>{errorMsg}</p>
+            </div>
+        );
+    }
+
+    const single = filteredRecipes.length === 1;
+
+    return (
+        <div style={{ padding: 40 }}>
+            <div className="results-shell">
+                <div className="results-shell-header">
+                    <div className="results-shell-title-row">
+                        <span className="results-shell-icon" aria-hidden="true">🥑</span>
+                        <h2 className="results-shell-title">Browse Recipes</h2>
+                    </div>
+
+                    <div className="results-shell-subtitle">
+                        {filteredRecipes.length} recipe{filteredRecipes.length !== 1 ? "s" : ""}
+                    </div>
+                </div>
+
+                <div className="results-shell-body">
+                    <div className="recipes-search-wrap">
+                        <input
+                            type="text"
+                            className="recipes-search-input"
+                            placeholder="Search by recipe name or ingredient..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+
+                    {filteredRecipes.length === 0 ? (
+                        <p>No recipes matched your search.</p>
+                    ) : (
+                        <div className={`results-grid ${single ? "single" : ""}`}>
+                            {filteredRecipes.map((recipe) => (
+                                <RecipeCard
+                                    key={recipe.id}
+                                    title={recipe.name}
+                                    cookTime={recipe.timeMinutes ? `${recipe.timeMinutes} min` : ""}
+                                    variant="browse"
+                                    ingredientsText={(recipe.ingredients_with_measurements?.slice(0, 3) || recipe.ingredients || []).join(", ")}
+                                    imageUrl={recipe.image_url || ""}
+                                    onView={() => navigate(`/recipe/${recipe.id}`, { state: { recipe } })}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}

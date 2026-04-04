@@ -5,6 +5,7 @@ import Register from "../pages/register.jsx";
 import Pantry from "../pages/pantry.jsx";
 import PantryAdd from "../pages/pantryadd.jsx";
 import RecipeDetails from "../pages/recipedetails.jsx";
+import AllRecipesPage from '../pages/allrecipes.jsx';
 
 export default function AppRoutes() {
   return (
@@ -15,6 +16,7 @@ export default function AppRoutes() {
       <Route path="/pantry" element={<Pantry />} />
       <Route path="/pantry-add" element={<PantryAdd />} />
       <Route path="/recipe/:id" element={<RecipeDetails />} />
+      <Route path="/recipes" element={<AllRecipesPage />} />
     </Routes>
   );
 }
