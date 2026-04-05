@@ -14,11 +14,14 @@ export default function Navbar() {
                     <NavLink to="/pantry" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
                         Pantry
                     </NavLink>
+                    <NavLink to="/pantry-add" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+                        Add Ingredients
+                    </NavLink>
                     <NavLink to="/results" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
                         My Recipes
                     </NavLink>
-                    <NavLink to="/pantry-add" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
-                        Add Ingredients
+                    <NavLink to="/recipes" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+                        All Recipes
                     </NavLink>
                 </nav>
 

@@ -269,3 +269,49 @@
   grid-template-columns: 1fr;
   max-width: 780px;
 }
+
+.recipe-card.browse {
+  background: #eef6ff;
+  border-color: #cfe3ff;
+  position: relative;
+}
+
+.recipe-card.browse::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 6px;
+  border-radius: 12px;
+  background: #1e88e5;
+}
+
+.recipe-card-status.browse {
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.recipe-card-button.browse {
+  background: #1e88e5;
+  color: white;
+}
+
+.recipes-search-wrap {
+  margin-bottom: 18px;
+}
+
+.recipes-search-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #cfd8dc;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.recipes-search-input:focus {
+  border-color: #1f6feb;
+  box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.12);
+}

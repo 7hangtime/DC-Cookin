@@ -6,6 +6,7 @@ import Register from "../pages/register.jsx";
 import Pantry from "../pages/pantry.jsx";
 import PantryAdd from "../pages/pantryadd.jsx";
 import RecipeDetails from "../pages/recipedetails.jsx";
+import AllRecipesPage from '../pages/allrecipes.jsx';
 import RequireAuth from "../components/RequireAuth.jsx";
 import RedirectIfAuth from "../components/RedirectIfAuth.jsx";
 
@@ -43,7 +44,11 @@ export default function AppRoutes() {
           <RecipeDetails />
         </RequireAuth>
       } />
+      <Route path="/recipes" element={
+      <RequireAuth>
+        <AllRecipesPage />
+      </RequireAuth>
+    } />
     </Routes>
   );
 }
-// End of Code
