@@ -45,42 +45,29 @@ export default function PantryAdd() {
     useEffect(() => {
         const fetchSessionAndPantry = async () => {
         const { data } = await supabase.auth.getSession();
-        if (data.session) {
-            const loggedUser = data.session.user; 
-            setUser(loggedUser);
-
-            try {
-            const {data: items, error} = await supabase
-                .from('pantry')
-                .select("*")
-                .eq("user_id", loggedUser.id)
-                .order("ingredient_name", { ascending: true });
-            if (error) {
-                console.error("Failed to fetch your pantry ingredients: ", error);
-            } else {
-                setPantryItems(items);
-            }
-            } catch (error) {
-            console.error("Failed to fetch pantry items:", error);
-            }
-        }
+      if (data.session) {
+        const loggedUser = data.session.user;
+        setUser(loggedUser);
 
         try {
-            {/* Fetches ingredients from supabase */}
-            const {data: ingredients, error} = await supabase
-                .from('ingredients')
-                .select("*")
-                .order("ingredient_name", { ascending: true });
-
-            {/* Prints error if failed, else put ingredients into list */}
-            if (error) {
-                console.error("Failed to fetch ingredients: ", error);
-            } else {
-                setIngredientsList(ingredients);
-            }
-        } catch(error) {
-            console.error("Failed to fetch ingredients: ", error);
+          const res = await fetch(
+            `http://localhost:3001/api/pantry?userId=${loggedUser.id}`
+          );
+          const items = await res.json();
+          setPantryItems(items);
+        } catch (err) {
+          console.error("Failed to fetch pantry items:", err);
         }
+      }
+
+     try {
+       const res = await fetch("http://localhost:3001/api/ingredients");
+       if (!res.ok) throw new Error("Failed to fetch ingredients");
+       const data = await res.json();
+       setIngredientsList(data);
+     } catch (error) {
+       console.error("Failed to fetch ingredients:", error);
+     }
         };
 
         fetchSessionAndPantry();
@@ -107,26 +94,31 @@ export default function PantryAdd() {
         if (!user || holdingList.length === 0) return;
 
         {/* Waits for supabase response then adds ingredients from holding list */}
-       const { data, error } = await supabase
-         .from("pantry")
-         .upsert(
-           holdingList.map((ingredient) => ({
-             user_id: user.id,
-             ingredient_id: ingredient.id,
-             ingredient_name: ingredient.ingredient_name,
-             Preference: create_preference(prefer, avoid),
-           })),
-           { onConflict: ["user_id", "ingredient_id"] }
-         )
-         .select();
-        
-        {/* Catches errors, if no errors, updates pantry on page */}
-        if (error) console.error(error);
-        else setPantryItems([...pantryItems, ...data]);
+         try {
+           const res = await fetch("http://localhost:3001/api/pantry/add", {
+             method: "POST",
+             headers: { "Content-Type": "application/json" },
+             body: JSON.stringify({
+               userId: user.id,
+               ingredients: holdingList.map((i) => ({
+                 ...i,
+                 Preference: create_preference(prefer, avoid),
+               })),
+             }),
+           });
 
-        {/* Resets holding list */}
-        setHoldingList([]);
-        cycle_preference("reset");
+           const pantry = await fetch(
+             `http://localhost:3001/api/pantry?userId=${user.id}`
+           );
+           const updatedPantry = await pantry.json();
+           setPantryItems(updatedPantry);
+
+           {/* Resets holding list */}
+           setHoldingList([]);
+           cycle_preference("reset");
+         } catch (err) {
+           console.error("Failed to add ingredients:", err);
+         }
 
     };
 
@@ -158,14 +150,12 @@ export default function PantryAdd() {
     };
     {/* deletes pantry item from supabase */}
     const handleDelete = async (ingredientId) => {
-        const { error } = await supabase
-            .from("pantry")
-            .delete()
-            .eq("user_id", user.id)
-            .eq("ingredient_id", ingredientId);
-        if (error) {
-            console.error("Failed to delete ingredient: ", error);
-        }
+          await fetch(
+            `http://localhost:3001/api/pantry/delete/${user.id}/${ingredientId}`,
+            {
+              method: "DELETE",
+            }
+          );
         // Update front-end immediately
         setPantryItems(pantryItems.filter(item => item.ingredient_id !== ingredientId));
     };
@@ -236,13 +226,30 @@ export default function PantryAdd() {
         else if(cur == 1){
             item.Preference = -1;
         }
-        const { data, error } = await supabase
-            .from("pantry")
-            .update({ Preference: item.Preference })
-            .eq("id", itemId)
-            .eq("user_id", user.id)    
-        setTest(!test); // trigger re-render
-
+        // const { data, error } = await supabase
+        //     .from("pantry")
+        //     .update({ Preference: item.Preference })
+        //     .eq("id", itemId)
+        //     .eq("user_id", user.id)    
+        // setTest(!test); // trigger re-render
+        try {
+          await fetch("http://localhost:3001/api/pantry/update-preference", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              userId: user.id,
+              ingredientId: item.ingredient_id,
+              Preference: item.Preference,
+            }),
+          });
+          const res = await fetch(
+            `http://localhost:3001/api/pantry?userId=${user.id}`
+          );
+          const updatedPantry = await res.json();
+          setPantryItems(updatedPantry);
+        } catch (err) {
+          console.error("Failed to update preference:", err);
+        }
         
     }
 

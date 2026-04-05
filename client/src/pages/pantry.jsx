@@ -11,43 +11,37 @@ export default function Pantry() {
     const fetchSessionAndPantry = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        const loggedUser = data.session.user; 
+        const loggedUser = data.session.user;
         setUser(loggedUser);
 
-       
-
-          try {
-          const {data: items, error} = await supabase
-              .from('pantry')
-              .select("*")
-              .eq("user_id", loggedUser.id)
-              .order("ingredient_name", { ascending: true });
-          if (error) {
-              console.error("Failed to fetch your pantry ingredients: ", error);
-          } else {
-              setPantryItems(items);
-          }
-          } catch (error) {
-          console.error("Failed to fetch pantry items:", error);
-          }
+        try {
+          const res = await fetch(
+            `http://localhost:3001/api/pantry?userId=${loggedUser.id}`
+          );
+          const items = await res.json();
+          setPantryItems(items);
+        } catch (err) {
+          console.error("Failed to fetch pantry items:", err);
+        }
       }
     };
 
     fetchSessionAndPantry();
   }, []);
+  
    {/* deletes pantry item from supabase */}
-    const handleDelete = async (ingredientId) => {
-        const { error } = await supabase
-            .from("pantry")
-            .delete()
-            .eq("user_id", user.id)
-            .eq("ingredient_id", ingredientId);
-        if (error) {
-            console.error("Failed to delete ingredient: ", error);
-        }
-        // Update front-end immediately
-        setPantryItems(pantryItems.filter(item => item.ingredient_id !== ingredientId));
-    };
+const handleDelete = async (ingredientId) => {
+  await fetch(
+    `http://localhost:3001/api/pantry/delete/${user.id}/${ingredientId}`,
+    {
+      method: "DELETE",
+    }
+  );
+  // Update front-end immediately
+  setPantryItems(
+    pantryItems.filter((item) => item.ingredient_id !== ingredientId)
+  );
+};
         
     {/* Loads pantry items pulled from supabase */}
     const loadpantry = () => {
@@ -101,28 +95,41 @@ export default function Pantry() {
     };
 
     {/* updates preference of ingredient in pantry */}
-    const update_preference = async (itemId) => { 
-        const item = pantryItems.find(item => item.id === itemId);
-        if (!item) return;
-        let cur = item.Preference;
-        if(cur == -1){
-            item.Preference = 0;
-        }
-        else if(cur == 0){
-            item.Preference = 1;
-        }
-        else if(cur == 1){
-            item.Preference = -1;
-        }
-        const { data, error } = await supabase
-            .from("pantry")
-            .update({ Preference: item.Preference })
-            .eq("id", itemId)
-            .eq("user_id", user.id)    
-        setTest(!test); // trigger re-render
+    const update_preference = async (itemId) => {
+      const item = pantryItems.find((item) => item.id === itemId);
+      if (!item) return;
+      // cycle preference
+      let newPreference;
+      if (item.Preference === -1) newPreference = 0;
+      else if (item.Preference === 0) newPreference = 1;
+      else if (item.Preference === 1) newPreference = -1;
 
-        
-    }
+      // update backend
+      const res = await fetch(
+        "http://localhost:3001/api/pantry/update-preference",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user.id,
+            ingredientId: item.ingredient_id,
+            Preference: newPreference,
+          }),
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) console.error(data.error);
+
+      // update frontend immediately
+      setPantryItems(
+        pantryItems.map((p) =>
+          p.ingredient_id === item.ingredient_id
+            ? { ...p, Preference: newPreference }
+            : p
+        )
+      );
+    };
 
 // Delete an ingredient from Supabase and update front-end
                             // note:
