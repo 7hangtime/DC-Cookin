@@ -49,16 +49,27 @@ export default function RecipeAdd() {
 
         if (Object.keys(formErrors).length > 0) {
             setErrors(formErrors);
-            return; // stop submission
+            return;
         }
 
-        const res = await fetch('/api/recipes', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(recipeData)
-        });
+        try {
+            const res = await fetch("http://localhost:3001/api/recipes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(recipeData),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "Failed to add recipe");
+            }
+
+            alert("Recipe added!");
+            e.target.reset();
+        } catch (err) {
+            alert("Error: " + err.message);
+        }
     };
 
 
@@ -71,7 +82,7 @@ export default function RecipeAdd() {
         <div style={{
             ...styles.container, 
             backgroundColor:"#344d9e", 
-            backgroundImage:"linear-gradient(135deg, #0010f7 0%, #75a6ce 100%)"
+            backgroundImage:"linear-gradient(90deg, #1f6feb, #20b7c7)"
         }}>
             <h1 style={{
             ...styles.title, 
