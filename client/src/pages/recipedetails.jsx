@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"; // Importing React and necessary hooks
 import { useParams, useNavigate } from "react-router-dom"; // Importing hooks from react-router-dom
+import { supabase } from "../../supabase";
 
 /*
 The purpose of this code is to display a recipe's details on a webpage. It fetches the recipe data from an API, handles loading and error states, and renders the recipe information in a visually appealing format. The recipe details include the recipe name, image, ingredients, and instructions. That way the user can view the recipe details and navigate back to the previous page. 
@@ -16,6 +17,10 @@ export default function RecipeDetails() {
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [reviewError, setReviewError] = useState("");
 
   const [reviews, setReviews] = useState([
     { user: "Alice", rating: 5, comment: "Loved this recipe!" },
@@ -24,15 +29,101 @@ export default function RecipeDetails() {
   const [newComment, setNewComment] = useState("");
   const [newRating, setNewRating] = useState(5);
 
-  const handleAddReview = () => {
-    if (!newComment) return;
-    setReviews([
-      ...reviews,
-      { user: "You", rating: newRating, comment: newComment },
-    ]);
-    setNewComment("");
-    setNewRating(5);
+  const handleAddReview = async () => {
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      alert("You must be logged in to submit a review.");
+      return;
+    }
+
+    const user_id = session.user.id; 
+
+    if (!newComment) {
+      setReviewError("Comment is required.");
+      return;
+    }
+
+    if (!newRating || newRating < 1 || newRating > 5) {
+      setReviewError("Please select a valid rating.");
+      return;
+    }
+    setReviewError("");
+    try {
+      const res = await fetch(`http://localhost:3001${API_BASE}/reviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id,
+          recipe_id: id,
+          rating: newRating,
+          comment: newComment,
+          email: session.user.email
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to submit review");
+      }
+
+      const savedReview = await res.json();
+      setReviews((prev) => [...prev, savedReview]);
+      setNewComment("");
+      setNewRating(5);
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
   };
+
+  useEffect(() => {
+    async function fetchAverage() {
+      try {
+        const res = await fetch(
+          `http://localhost:3001${API_BASE}/reviews/${id}/average`
+        );
+        if (!res.ok) throw new Error("Could not fetch average rating");
+        const data = await res.json();
+        setAverageRating(data.average_rating);
+        setReviewCount(data.review_count);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchAverage();
+  }, [id, reviews]); 
+
+  useEffect(() => {
+    async function fetchReviews() {
+      try {
+        const res = await fetch(
+          `http://localhost:3001${API_BASE}/reviews/${id}`
+        );
+        if (!res.ok) throw new Error("Could not fetch reviews");
+        const data = await res.json();
+        setReviews(data.reviews || []); 
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchReviews();
+  }, [id]);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+
+    getUser();
+
+  }, []);
 
   // We fetch the recipe data from the API using the recipe ID from the URL parameters.
   useEffect(() => {
@@ -121,33 +212,53 @@ export default function RecipeDetails() {
           <h2 style={styles.sectionTitle}>Reviews & Ratings</h2>
 
           <div style={styles.averageRating}>
-            <span style={styles.stars}>★★★★☆</span>
-            <span style={styles.ratingText}>4.6 (12 reviews)</span>
+            <span style={styles.stars}>
+              {"★".repeat(Math.round(averageRating)) +
+                "☆".repeat(5 - Math.round(averageRating))}
+            </span>
+            <span style={styles.ratingText}>
+              {averageRating.toFixed(1)} ({reviewCount}{" "}
+              {reviewCount === 1 ? "review" : "reviews"})
+            </span>
           </div>
 
           <ul style={styles.list}>
-            <li style={styles.reviewItem}>
-              <div style={styles.reviewHeader}>
-                <strong>Alice</strong> - ★★★★★
-              </div>
-              <p>Loved this recipe!</p>
-            </li>
-            <li style={styles.reviewItem}>
-              <div style={styles.reviewHeader}>
-                <strong>Bob</strong> - ★★★★☆
-              </div>
-              <p>Very tasty, easy to make.</p>
-            </li>
+            {reviews.length > 0 ? (
+              reviews.map((review, idx) => (
+                <li key={idx} style={styles.reviewItem}>
+                  <div style={styles.reviewHeader}>
+                    <strong>{review.email}</strong> -{" "}
+                    {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
+                  </div>
+                  <p>{review.comment}</p>
+                </li>
+              ))
+            ) : (
+              <li>No reviews yet.</li>
+            )}
           </ul>
 
           <div style={styles.newReview}>
+            {reviewError && (
+              <div style={{ color: "red", marginBottom: "0.5rem" }}>
+                {reviewError}
+              </div>
+            )}
             <textarea
               placeholder="Add your review..."
               style={styles.textarea}
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              disabled={!user} 
             />
             <label style={styles.label}>
               Rating:
-              <select style={styles.select}>
+              <select
+                style={styles.select}
+                value={newRating}
+                onChange={(e) => setNewRating(Number(e.target.value))}
+                disabled={!user} 
+              >
                 {[5, 4, 3, 2, 1].map((n) => (
                   <option key={n} value={n}>
                     {n} ⭐
@@ -155,7 +266,17 @@ export default function RecipeDetails() {
                 ))}
               </select>
             </label>
-            <button style={styles.submitButton}>Submit Review</button>
+            <button
+              style={{
+                ...styles.submitButton,
+                opacity: user ? 1 : 0.5,
+                cursor: user ? "pointer" : "not-allowed",
+              }}
+              onClick={handleAddReview}
+              disabled={!user}
+            >
+              Submit Review
+            </button>
           </div>
         </section>
       </div>

@@ -12,9 +12,9 @@ const recipes = JSON.parse(fs.readFileSync(recipesPath, "utf-8"));
 // Add a new review (one per user per recip
 router.post("/", async (req, res) => {
   try {
-    const { user_id, recipe_id, rating, comment } = req.body;
+    const { user_id, recipe_id, rating, comment, email } = req.body;
 
-    if (!user_id || !recipe_id || rating == null || !comment) {
+    if (!user_id || !recipe_id || rating == null || !comment || !email) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
     // Insert new review
     const { data, error: insertError } = await supabase
       .from("reviews")
-      .insert([{ user_id, recipe_id, rating, comment }])
+      .insert([{ user_id, recipe_id, rating, comment, email }])
       .select() // to return the inserted row
       .single();
 
