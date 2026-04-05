@@ -6,7 +6,7 @@ export default function Pantry() {
   const [pantryItems, setPantryItems] = useState([]);
   const [test, setTest] = useState(false); // state variable to trigger re-render
     const colors= ['#e65353', "#9c9c9c", '#83e67b'] // colors for pantry items background
-
+  const [error, setError] = useState(null);
   useEffect(() => {
     const fetchSessionAndPantry = async () => {
       const { data } = await supabase.auth.getSession();
@@ -18,9 +18,14 @@ export default function Pantry() {
           const res = await fetch(
             `http://localhost:3001/api/pantry?userId=${loggedUser.id}`
           );
+          if (!res.ok) {
+            const errData = await res.json();
+            throw new Error(errData.error || "Failed to fetch pantry items");
+          }
           const items = await res.json();
           setPantryItems(items);
         } catch (err) {
+          setError(err.message);
           console.error("Failed to fetch pantry items:", err);
         }
       }
@@ -162,36 +167,69 @@ const handleDelete = async (ingredientId) => {
 
     
 return (
-    <div style={{padding: "40px", position: "relative", minHeight: "100vh"}}>
-      <div style={{...styles.container,paddingBottom:"30px" , backgroundImage:"linear-gradient(90deg, #1f6feb, #20b7c7)"}}>
-        <div style={styles.header}>
-        <h1 style={{...styles.title, color:"#ffffff", position:"relative", top:"10px", left:"-750px"}}>My Pantry</h1>
-        <p style={{...styles.subtitle, position:"absolute", top:"50px", right:"60px", color:"#ffffff", fontFamily:"Arial, sans-serif"}}>{user ? <p>Logged in as: {user.email}</p> : <p>Not logged in</p>}</p>
+  <div style={{ padding: "40px", position: "relative", minHeight: "100vh" }}>
+    <div
+      style={{
+        ...styles.container,
+        paddingBottom: "30px",
+        backgroundImage: "linear-gradient(90deg, #1f6feb, #20b7c7)",
+      }}
+    >
+      <div style={styles.header}>
+        <h1
+          style={{
+            ...styles.title,
+            color: "#ffffff",
+            position: "relative",
+            top: "10px",
+            left: "-750px",
+          }}
+        >
+          My Pantry
+        </h1>
+        <p
+          style={{
+            ...styles.subtitle,
+            position: "absolute",
+            top: "50px",
+            right: "60px",
+            color: "#ffffff",
+            fontFamily: "Arial, sans-serif",
+          }}
+        >
+          {user ? <p>Logged in as: {user.email}</p> : <p>Not logged in</p>}
+        </p>
         {/* <button style={{...styles.button, position:"absolute", top:"150px", right:"60px", width:"150px", backgroundColor:"#00ff62", color:"#000000"}} onClick={() => window.location.href = "/pantry-add"}>Add Ingredient</button> */}
-        
-           {/* show pantry  */}
-        <div style={{
-            ...styles.container, 
-            backgroundColor:"#ffffff", 
-            borderRadius:"15px", 
-            padding:"10px", 
-            marginTop:"20px", 
-            width:"1200px",
-            minHeight:"200px", 
-            boxShadow: "0 4px 20px rgba(0,0,0,0.1)", 
-            position:"relative",
-            top: "5px", 
-            left:"150px" }}>
-            <h1 style={{
-                    ...styles.title, 
-                    color:"#1e88e5", 
-                    fontSize:"16px"}}>
-                        Your Pantry
-                </h1>
-              {pantryItems.length > 0 ? (
-                
-              // this is the styling for the pantry items list, it is a grid with tight groupings and no bullet points 
-              <ul  
+
+        {/* show pantry  */}
+        <div
+          style={{
+            ...styles.container,
+            backgroundColor: "#ffffff",
+            borderRadius: "15px",
+            padding: "10px",
+            marginTop: "20px",
+            width: "1200px",
+            minHeight: "200px",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+            position: "relative",
+            top: "5px",
+            left: "150px",
+          }}
+        >
+          <h1
+            style={{
+              ...styles.title,
+              color: "#1e88e5",
+              fontSize: "16px",
+            }}
+          >
+            Your Pantry
+          </h1>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {pantryItems.length > 0 ? (
+            // this is the styling for the pantry items list, it is a grid with tight groupings and no bullet points
+            <ul
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(5, 1fr)",
@@ -201,25 +239,26 @@ return (
                 padding: "0",
                 listStyle: "none",
               }}
-              >
-                {loadpantry()}
+            >
+              {loadpantry()}
             </ul>
-            ) : (
-                <p style={{ 
-                    position: "absolute",
-                    marginTop: "37px", 
-                    marginLeft: "1px"
-                }}>loading pantry items...</p>
-
-                
-            )} 
-            </div>
-      </div>  
+          ) : (
+            <p
+              style={{
+                position: "absolute",
+                marginTop: "37px",
+                marginLeft: "1px",
+              }}
+            >
+              loading pantry items...
+            </p>
+          )}
+        </div>
       </div>
-      
-       
-       {/*  Original page */}
-{/* return(
+    </div>
+
+    {/*  Original page */}
+    {/* return(
   <div style={styles.container}>         
     <div style={styles.leftSide}>
       <div style={styles.titleContainer}>
@@ -239,10 +278,8 @@ return (
       </div>
     </div>
   </div> */}
-
-      
-    </div>
-  );
+  </div>
+);
 
 }
 
