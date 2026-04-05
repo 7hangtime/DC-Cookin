@@ -5,7 +5,9 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   const userId = req.query.userId;
-
+  if (!userId) {
+    return res.status(400).json({ error: "User must be logged in!" });
+  }
   const { data, error } = await supabase
     .from("pantry")
     .select("*")
@@ -42,6 +44,9 @@ router.post("/add", async (req, res) => {
 // Delete pantry item
 router.delete("/delete/:userId/:ingredientId", async (req, res) => {
     const { userId, ingredientId } = req.params;
+    if (!userId) {
+   return res.status(400).json({ error: "userId is required" });
+    }
 
     const { error } = await supabase
         .from("pantry")
