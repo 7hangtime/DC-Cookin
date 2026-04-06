@@ -49,7 +49,7 @@ export default function Navbar() {
                     <NavLink to="/recipes" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
                         All Recipes
                     </NavLink>
-                    <NavLink to="/recipe-add" className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}>
+                    <NavLink to="/recipe-add" className={({isActive}) => `nav-link ${isActive ? "active" : ""}`}>
                         Submit a Recipe
                     </NavLink>
                 </nav>
