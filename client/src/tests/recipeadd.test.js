@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { RecipeAdd } from "../pages/recipeadd.jsx";
+import RecipeAdd  from "../pages/recipeadd.jsx";
 import { addRecipe } from "../api/addrecipeApi.js";
 
 describe("Recipe Add", () => {

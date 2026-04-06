@@ -96,7 +96,7 @@ export default function RecipeAdd() {
                 <form id="recipeForm" onSubmit={formSubmit} style={{
                 position:"relative"
                 }}>
-                    <label for="recipename" style={{
+                    <label htmlFor="recipename" style={{
                         ...styles.label
                     }}>Recipe Name:</label><br></br>
                     <input type="text" id="recipename" name="recipename" style={{
@@ -105,7 +105,7 @@ export default function RecipeAdd() {
                         height:"20px"
                         }}></input><br></br>
 
-                    <label for="ingredients" style={{
+                    <label htmlFor="ingredients" style={{
                         ...styles.label
                     }}>Ingredients:</label><br></br>
                     <input type="text" id="ingredients" name="ingredients" style={{
@@ -114,7 +114,7 @@ export default function RecipeAdd() {
                         height:"20px"
                         }}></input><br></br>
 
-                    <label for="measurements" style={{
+                    <label htmlFor="measurements" style={{
                         ...styles.label
                     }}>Ingredient Measurements:</label><br></br>
                     <textarea id="measurements" name="measurements" style={{
@@ -125,7 +125,7 @@ export default function RecipeAdd() {
                         height:"125px"
                     }}></textarea><br></br>
                     
-                    <label for="instructions" style={{
+                    <label htmlFor="instructions" style={{
                         ...styles.label
                     }}>Recipe Instructions:</label><br></br>
                     <textarea id="instructions" name="instructions" style={{
@@ -136,7 +136,7 @@ export default function RecipeAdd() {
                         height:"175px"
                     }}></textarea><br></br>
 
-                    <label for="image" style={{
+                    <label htmlFor="image" style={{
                         ...styles.label
                     }}>Image URL:</label><br></br>
                     <input type="text" id="image" name="image" style={{
