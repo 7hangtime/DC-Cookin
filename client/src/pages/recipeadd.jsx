@@ -54,23 +54,7 @@ export default function RecipeAdd() {
         }
 
         try {
-<<<<<<< HEAD
-            const res = await fetch("http://localhost:3001/api/recipes", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(recipeData),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || "Failed to add recipe");
-            }
-
-            alert("Recipe added!");
-=======
             await addRecipe(recipeData);
->>>>>>> demo
             e.target.reset();
         } catch (err) {
             alert("Error: " + err.message);
