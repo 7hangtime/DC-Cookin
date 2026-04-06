@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabase";
+import { addRecipe } from "../api/addrecipeApi";
 
 export default function RecipeAdd() {
     const[user, setUser] = useState(null);
@@ -53,6 +54,7 @@ export default function RecipeAdd() {
         }
 
         try {
+<<<<<<< HEAD
             const res = await fetch("http://localhost:3001/api/recipes", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -66,6 +68,9 @@ export default function RecipeAdd() {
             }
 
             alert("Recipe added!");
+=======
+            await addRecipe(recipeData);
+>>>>>>> demo
             e.target.reset();
         } catch (err) {
             alert("Error: " + err.message);
