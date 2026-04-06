@@ -9,7 +9,7 @@ import RecipeDetails from "../pages/recipedetails.jsx";
 import AllRecipesPage from '../pages/allrecipes.jsx';
 import RequireAuth from "../components/RequireAuth.jsx";
 import RedirectIfAuth from "../components/RedirectIfAuth.jsx";
-import RecipeAdd from "../pages/recipeadd.jsx";
+
 
 // This part of the code will be used to define the routes for the web application. The `Routes` component is used to wrap all the `Route` components. The `Route` component is used to define a single route. The `path` prop is used to define the path of the route. The `element` prop is
 export default function AppRoutes() {
@@ -50,11 +50,7 @@ export default function AppRoutes() {
         <AllRecipesPage />
       </RequireAuth>
     } />
-      <Route path="/recipe-add" element={
-        <RequireAuth>
-          <RecipeAdd />
-        </RequireAuth>
-      }/>
+      
     </Routes>
   );
 }
