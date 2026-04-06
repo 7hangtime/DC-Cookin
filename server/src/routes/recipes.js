@@ -4,11 +4,16 @@ import { matchRecipes } from "../utils/matchRecipes.js";
 export default function recipesRouter(recipesData) {
     const router = express.Router();
 
+    router.get("/", (req, res) => {
+        return res.json(recipesData);
+    });
+
     router.post("/matches", (req, res) => {
         const pantry = req.body?.ingredients;
         if (!Array.isArray(pantry)) {
             return res.status(400).json({ error: "Body must include ingredients: string[]" });
         }
+
         const maxMissing = Number(req.body?.maxMissing ?? 2);
         const result = matchRecipes(recipesData, pantry, { maxMissing });
         return res.json(result);
