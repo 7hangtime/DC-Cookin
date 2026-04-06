@@ -1,6 +1,7 @@
 import express from 'express'
 import pantryRouter from "./routes/pantry.js";
 import recipesRouter from './routes/recipes.js';
+import ingredientsRouter from "./routes/ingredients.js";
 import reviewsRouter from "./routes/reviews.js";
 import cors from "cors";
 import fs from "node:fs";
@@ -18,6 +19,7 @@ app.use(express.json())
 
 app.use("/api/pantry", pantryRouter);
 app.use("/api/recipes", recipesRouter(recipes));
+app.use("/api/ingredients", ingredientsRouter);
 app.use("/api/reviews", reviewsRouter); 
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
