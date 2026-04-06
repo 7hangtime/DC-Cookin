@@ -1,6 +1,5 @@
 import express from "express";
 import fs from "fs";
-import path from "path";
 import { matchRecipes } from "../utils/matchRecipes.js";
 
 export default function recipesRouter(recipesData) {
@@ -10,33 +9,42 @@ export default function recipesRouter(recipesData) {
         return res.json(recipesData);
     });
 
-    router.post("/", (req, res) => {
-        const body = req.body;
-        if (!body.recipename || !body.ingredients) {
+    router.post("/add", (req, res) => {
+        if (!req.body.recipename || !req.body.ingredients) {
             return res.status(400).json({ error: "Recipe name and ingredients are required" });
         }
 
         const newRecipe = {
-            id: body.recipename.trim().toLowerCase().replace(/\s+/g, "-"),
-            name: body.recipename,
-            ingredients: body.ingredients.split(","),
-            ingredients_with_measurements: (body.measurements || "").split(","),
-            directions: (body.instructions || "").split(","),
-            image_url: body.image || "",
+            id: req.body.recipename.trim().toLowerCase().replace(/\s+/g, "-"),
+            name: req.body.recipename,
+            ingredients: req.body.ingredients.split(","),
+            ingredients_with_measurements: (req.body.measurements || "").split(","),
+            directions: (req.body.instructions || "").split(","),
+            image_url: req.body.image || "",
         };
 
-        const filePath = path.join(process.cwd(), "server/src/data/recipes.json");
-        const existingData = fs.existsSync(filePath)
-            ? JSON.parse(fs.readFileSync(filePath, "utf8"))
-            : [];
+        const file = "./src/data/recipes.json";
 
-        existingData.push(newRecipe);
+        let recipes = [];
+        try {
+            if (fs.existsSync(file)) {
+                const data = fs.readFileSync(file, "utf8");
+                recipes = JSON.parse(data);
+            }
+        } catch (err) {
+            return res.status(500).json({ error: "Could not read recipes" });
+        }
 
-        fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));
+        recipes.push(newRecipe);
 
-        recipesData.push(newRecipe);
+        try {
+            fs.writeFileSync(file, JSON.stringify(recipes, null, 2), "utf8");
+        } catch (err) {
+            return res.status(500).json({ erro: "Could not save recipe" });
+        }
 
-        return res.status(201).json({ success: true, recipe: newRecipe });
+        return res.status(200).json(newRecipe);
+
     });
 
     router.post("/matches", (req, res) => {
