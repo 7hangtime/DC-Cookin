@@ -8,6 +8,44 @@ export default function recipesRouter(recipesData) {
         return res.json(recipesData);
     });
 
+    router.post("/add", (req, res) => {
+        if (!req.body.recipename || !req.body.ingredients) {
+            return res.status(400).json({ error: "Recipe name and ingredients are required" });
+        }
+
+        const newRecipe = {
+            id: req.body.recipename.trim().toLowerCase().replace(/\s+/g, "-"),
+            name: req.body.recipename,
+            ingredients: req.body.ingredients.split(","),
+            ingredients_with_measurements: (req.body.measurements || "").split(","),
+            directions: (req.body.instructions || "").split(","),
+            image_url: req.body.image || "",
+        };
+
+        const file = "./src/data/recipes.json";
+
+        let recipes = [];
+        try {
+            if (fs.existsSync(file)) {
+                const data = fs.readFileSync(file, "utf8");
+                recipes = JSON.parse(data);
+            }
+        } catch (err) {
+            return res.status(500).json({ error: "Could not read recipes" });
+        }
+
+        recipes.push(newRecipe);
+
+        try {
+            fs.writeFileSync(file, JSON.stringify(recipes, null, 2), "utf8");
+        } catch (err) {
+            return res.status(500).json({ erro: "Could not save recipe" });
+        }
+
+        return res.status(200).json(newRecipe);
+
+    });
+
     router.post("/matches", (req, res) => {
         const pantry = req.body?.ingredients;
         if (!Array.isArray(pantry)) {
