@@ -6,48 +6,47 @@ export default function Pantry() {
   const [pantryItems, setPantryItems] = useState([]);
   const [test, setTest] = useState(false); // state variable to trigger re-render
     const colors= ['#e65353', "#9c9c9c", '#83e67b'] // colors for pantry items background
-
+  const [error, setError] = useState(null);
   useEffect(() => {
     const fetchSessionAndPantry = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        const loggedUser = data.session.user; 
+        const loggedUser = data.session.user;
         setUser(loggedUser);
 
-       
-
-          try {
-          const {data: items, error} = await supabase
-              .from('pantry')
-              .select("*")
-              .eq("user_id", loggedUser.id)
-              .order("ingredient_name", { ascending: true });
-          if (error) {
-              console.error("Failed to fetch your pantry ingredients: ", error);
-          } else {
-              setPantryItems(items);
+        try {
+          const res = await fetch(
+            `http://localhost:3001/api/pantry?userId=${loggedUser.id}`
+          );
+          if (!res.ok) {
+            const errData = await res.json();
+            throw new Error(errData.error || "Failed to fetch pantry items");
           }
-          } catch (error) {
-          console.error("Failed to fetch pantry items:", error);
-          }
+          const items = await res.json();
+          setPantryItems(items);
+        } catch (err) {
+          setError(err.message);
+          console.error("Failed to fetch pantry items:", err);
+        }
       }
     };
 
     fetchSessionAndPantry();
   }, []);
+  
    {/* deletes pantry item from supabase */}
-    const handleDelete = async (ingredientId) => {
-        const { error } = await supabase
-            .from("pantry")
-            .delete()
-            .eq("user_id", user.id)
-            .eq("ingredient_id", ingredientId);
-        if (error) {
-            console.error("Failed to delete ingredient: ", error);
-        }
-        // Update front-end immediately
-        setPantryItems(pantryItems.filter(item => item.ingredient_id !== ingredientId));
-    };
+const handleDelete = async (ingredientId) => {
+  await fetch(
+    `http://localhost:3001/api/pantry/delete/${user.id}/${ingredientId}`,
+    {
+      method: "DELETE",
+    }
+  );
+  // Update front-end immediately
+  setPantryItems(
+    pantryItems.filter((item) => item.ingredient_id !== ingredientId)
+  );
+};
         
     {/* Loads pantry items pulled from supabase */}
     const loadpantry = () => {
@@ -101,28 +100,41 @@ export default function Pantry() {
     };
 
     {/* updates preference of ingredient in pantry */}
-    const update_preference = async (itemId) => { 
-        const item = pantryItems.find(item => item.id === itemId);
-        if (!item) return;
-        let cur = item.Preference;
-        if(cur == -1){
-            item.Preference = 0;
-        }
-        else if(cur == 0){
-            item.Preference = 1;
-        }
-        else if(cur == 1){
-            item.Preference = -1;
-        }
-        const { data, error } = await supabase
-            .from("pantry")
-            .update({ Preference: item.Preference })
-            .eq("id", itemId)
-            .eq("user_id", user.id)    
-        setTest(!test); // trigger re-render
+    const update_preference = async (itemId) => {
+      const item = pantryItems.find((item) => item.id === itemId);
+      if (!item) return;
+      // cycle preference
+      let newPreference;
+      if (item.Preference === -1) newPreference = 0;
+      else if (item.Preference === 0) newPreference = 1;
+      else if (item.Preference === 1) newPreference = -1;
 
-        
-    }
+      // update backend
+      const res = await fetch(
+        "http://localhost:3001/api/pantry/update-preference",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user.id,
+            ingredientId: item.ingredient_id,
+            Preference: newPreference,
+          }),
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) console.error(data.error);
+
+      // update frontend immediately
+      setPantryItems(
+        pantryItems.map((p) =>
+          p.ingredient_id === item.ingredient_id
+            ? { ...p, Preference: newPreference }
+            : p
+        )
+      );
+    };
 
 // Delete an ingredient from Supabase and update front-end
                             // note:
@@ -155,36 +167,69 @@ export default function Pantry() {
 
     
 return (
-    <div style={{padding: "40px", position: "relative", minHeight: "100vh"}}>
-      <div style={{...styles.container,paddingBottom:"30px" , backgroundImage:"linear-gradient(90deg, #1f6feb, #20b7c7)"}}>
-        <div style={styles.header}>
-        <h1 style={{...styles.title, color:"#ffffff", position:"relative", top:"10px", left:"-750px"}}>My Pantry</h1>
-        <p style={{...styles.subtitle, position:"absolute", top:"50px", right:"60px", color:"#ffffff", fontFamily:"Arial, sans-serif"}}>{user ? <p>Logged in as: {user.email}</p> : <p>Not logged in</p>}</p>
+  <div style={{ padding: "40px", position: "relative", minHeight: "100vh" }}>
+    <div
+      style={{
+        ...styles.container,
+        paddingBottom: "30px",
+        backgroundImage: "linear-gradient(90deg, #1f6feb, #20b7c7)",
+      }}
+    >
+      <div style={styles.header}>
+        <h1
+          style={{
+            ...styles.title,
+            color: "#ffffff",
+            position: "relative",
+            top: "10px",
+            left: "-750px",
+          }}
+        >
+          My Pantry
+        </h1>
+        <p
+          style={{
+            ...styles.subtitle,
+            position: "absolute",
+            top: "50px",
+            right: "60px",
+            color: "#ffffff",
+            fontFamily: "Arial, sans-serif",
+          }}
+        >
+          {user ? <p>Logged in as: {user.email}</p> : <p>Not logged in</p>}
+        </p>
         {/* <button style={{...styles.button, position:"absolute", top:"150px", right:"60px", width:"150px", backgroundColor:"#00ff62", color:"#000000"}} onClick={() => window.location.href = "/pantry-add"}>Add Ingredient</button> */}
-        
-           {/* show pantry  */}
-        <div style={{
-            ...styles.container, 
-            backgroundColor:"#ffffff", 
-            borderRadius:"15px", 
-            padding:"10px", 
-            marginTop:"20px", 
-            width:"1200px",
-            minHeight:"200px", 
-            boxShadow: "0 4px 20px rgba(0,0,0,0.1)", 
-            position:"relative",
-            top: "5px", 
-            left:"150px" }}>
-            <h1 style={{
-                    ...styles.title, 
-                    color:"#1e88e5", 
-                    fontSize:"16px"}}>
-                        Your Pantry
-                </h1>
-              {pantryItems.length > 0 ? (
-                
-              // this is the styling for the pantry items list, it is a grid with tight groupings and no bullet points 
-              <ul  
+
+        {/* show pantry  */}
+        <div
+          style={{
+            ...styles.container,
+            backgroundColor: "#ffffff",
+            borderRadius: "15px",
+            padding: "10px",
+            marginTop: "20px",
+            width: "1200px",
+            minHeight: "200px",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+            position: "relative",
+            top: "5px",
+            left: "150px",
+          }}
+        >
+          <h1
+            style={{
+              ...styles.title,
+              color: "#1e88e5",
+              fontSize: "16px",
+            }}
+          >
+            Your Pantry
+          </h1>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {pantryItems.length > 0 ? (
+            // this is the styling for the pantry items list, it is a grid with tight groupings and no bullet points
+            <ul
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(5, 1fr)",
@@ -194,25 +239,26 @@ return (
                 padding: "0",
                 listStyle: "none",
               }}
-              >
-                {loadpantry()}
+            >
+              {loadpantry()}
             </ul>
-            ) : (
-                <p style={{ 
-                    position: "absolute",
-                    marginTop: "37px", 
-                    marginLeft: "1px"
-                }}>loading pantry items...</p>
-
-                
-            )} 
-            </div>
-      </div>  
+          ) : (
+            <p
+              style={{
+                position: "absolute",
+                marginTop: "37px",
+                marginLeft: "1px",
+              }}
+            >
+              loading pantry items...
+            </p>
+          )}
+        </div>
       </div>
-      
-       
-       {/*  Original page */}
-{/* return(
+    </div>
+
+    {/*  Original page */}
+    {/* return(
   <div style={styles.container}>         
     <div style={styles.leftSide}>
       <div style={styles.titleContainer}>
@@ -232,10 +278,8 @@ return (
       </div>
     </div>
   </div> */}
-
-      
-    </div>
-  );
+  </div>
+);
 
 }
 
