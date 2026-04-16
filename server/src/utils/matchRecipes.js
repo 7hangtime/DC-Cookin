@@ -14,8 +14,14 @@ function norm(s) {
 }
 
 // get matches
-export function matchRecipes(recipes, pantryNames, { maxMissing = 2 } = {}) {
+export function matchRecipes(recipes, pantryNames, { maxMissing = 2, preferences = {} } = {}) {
     const pantrySet = new Set((pantryNames || []).map(norm).filter(Boolean));
+
+    const avoidedIngs =
+        Object.entries(preferences)
+            .filter(([_, pref]) => pref === "-1")
+            .map(([name]) => norm(name))
+            .filter(Boolean);
 
     const exactMatches = [];
     const partialMatches = [];
@@ -23,6 +29,12 @@ export function matchRecipes(recipes, pantryNames, { maxMissing = 2 } = {}) {
     for (const recipe of recipes) {
         const recipeIngs = (recipe.ingredients || []).map(norm).filter(Boolean);
         if (recipeIngs.length === 0) continue;
+
+
+        const blocked = recipeIngs.some(ing => 
+        avoidedIngs.some(avoided => ing.includes(avoided))
+    );
+        if (blocked) continue;
 
         const missing = [];
         let have = 0;

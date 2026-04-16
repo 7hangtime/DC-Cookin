@@ -16,13 +16,26 @@ export default function ResultsPage() {
         setStatus("loading");
 
         // 1) Pantry from Supabase
-        const names = await fetchMyPantryIngredientNames();
+        const pantryItems = await fetchMyPantryIngredientNames();
+        const names = pantryItems.map(p => p.name);
         setPantryNames(names);
+
+        const preferencesMap = {};
+        pantryItems.forEach(p => {
+            if (p.preference !== undefined) {
+              preferencesMap[p.name] = p.preference;
+            }
+          }
+        )
 
         const res = await fetch("http://localhost:3001/api/recipes/matches", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ingredients: names, maxMissing: 3 }),
+          body: JSON.stringify({ 
+            ingredients: names,
+            maxMissing: 3,
+            preferences: preferencesMap
+          }),
         });
 
         const data = await res.json();

@@ -10,14 +10,16 @@ export async function fetchMyPantryIngredientNames() {
         .select(`
       ingredients:ingredient_id (
         ingredient_name
-      )
+      ),
+      Preference
     `)
         .eq("user_id", user.id);
 
     if (error) throw error;
 
     return (data ?? [])
-        .map(r => r.ingredients?.ingredient_name)
-        .filter(Boolean)
-        .map(name => name.toLowerCase().trim());
+      .map(r => ({
+        name: r.ingredients?.ingredient_name?.toLowerCase().trim(),
+        preference: r.Preference
+      })).filter(item => item.name)
 }
