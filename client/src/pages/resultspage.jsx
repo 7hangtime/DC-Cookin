@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import RecipeCard from "../components/recipecard.jsx";
 import { fetchMyPantryIngredientNames } from "../api/pantryApi";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,8 @@ export default function ResultsPage() {
   const [status, setStatus] = useState("loading"); // loading | success | error
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
+
+  const[searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -52,6 +54,28 @@ export default function ResultsPage() {
     load();
   }, []);
 
+  const filteredExact = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return matches.exactMatches;
+
+    return matches.exactMatches.filter((r) => {
+        const name = r.name?.toLowerCase() || "";
+        const ingredients = (r.ingredients_with_measurements || r.ingredients || []).join(" ").toLowerCase();
+        return name.includes(term) || ingredients.includes(term);
+    });
+}, [matches.exactMatches, searchTerm]);
+
+const filteredPartial = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return matches.partialMatches;
+
+    return matches.partialMatches.filter(({ recipe }) => {
+        const name = recipe.name?.toLowerCase() || "";
+        const ingredients = (recipe.ingredients_with_measurements || recipe.ingredients || []).join(" ").toLowerCase();
+        return name.includes(term) || ingredients.includes(term);
+    });
+}, [matches.partialMatches, searchTerm]);
+
   if (status === "loading") return <div style={{ padding: 40 }}>Loading results...</div>;
 
   if (status === "error") {
@@ -63,8 +87,8 @@ export default function ResultsPage() {
     );
   }
 
-  const exactSingle = matches.exactMatches.length === 1;
-  const partialSingle = matches.partialMatches.length === 1;
+  const exactSingle = filteredExact.length === 1;
+  const partialSingle = filteredPartial.length === 1;
 
   return (
     <div style={{ padding: 40 }}>
@@ -81,13 +105,27 @@ export default function ResultsPage() {
           </div>
         </div>
 
+        {/* Search Bar*/}
+        <div className="recipes-search-wrap"
+          style={{ paddingTop: "25px"}} >
+            <input
+                type="text"
+                className="recipes-search-input"
+                placeholder="Search by recipe name or ingredient..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+        </div>
+
+
         {/* Body */}
+        
         <div className="results-shell-body">
           <h3 className="section-title exact" style={{ marginTop: 0 }}>
             Exact Matches
           </h3>
 
-          {matches.exactMatches.length === 0 ? (
+          {filteredExact.length === 0 ? (
             <p>No exact matches yet.</p>
           ) : (
             <div className={`results-grid ${exactSingle ? "single" : ""}`}>
@@ -109,7 +147,7 @@ export default function ResultsPage() {
             Missing Ingredients
           </h3>
 
-          {matches.partialMatches.length === 0 ? (
+          {filteredPartial.length === 0 ? (
             <p>No partial matches yet.</p>
           ) : (
             <div className={`results-grid ${partialSingle ? "single" : ""}`}>
