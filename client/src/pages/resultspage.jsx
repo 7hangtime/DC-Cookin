@@ -61,8 +61,7 @@ export default function ResultsPage() {
 
     return matches.exactMatches.filter((r) => {
         const name = r.name?.toLowerCase() || "";
-        const ingredients = (r.ingredients_with_measurements || r.ingredients || []).join(" ").toLowerCase();
-        return name.includes(term) || ingredients.includes(term);
+        return name.includes(term) ;
     });
 }, [matches.exactMatches, searchTerm]);
 
@@ -72,8 +71,7 @@ const filteredPartial = useMemo(() => {
 
     return matches.partialMatches.filter(({ recipe }) => {
         const name = recipe.name?.toLowerCase() || "";
-        const ingredients = (recipe.ingredients_with_measurements || recipe.ingredients || []).join(" ").toLowerCase();
-        return name.includes(term) || ingredients.includes(term);
+        return name.includes(term);
     });
 }, [matches.partialMatches, searchTerm]);
 
@@ -134,8 +132,10 @@ const filteredPartial = useMemo(() => {
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              style={{color:"crimson", backgroundColor:"crimson"}}
-            ></button>
+              style={{color:"black", backgroundColor:"crimson"}}
+            >
+              Clear
+            </button>
           )}
         </div>
 
