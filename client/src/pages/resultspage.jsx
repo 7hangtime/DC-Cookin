@@ -11,7 +11,8 @@ export default function ResultsPage() {
   const navigate = useNavigate();
 
   const[searchTerm, setSearchTerm] = useState('');
-
+  const SEARCH_SUGGESTIONS = ["Soup", "Sandwich", "Burger", "Salad", "Pie", "Cake", "Cookie", "Candy"];
+  
   useEffect(() => {
     async function load() {
       try {
@@ -117,6 +118,26 @@ const filteredPartial = useMemo(() => {
             />
         </div>
 
+        {/* quick search*/}
+        <div style={{
+          display: "flex",
+          gap: "8px"
+        }}>
+          {SEARCH_SUGGESTIONS.map(tag => (
+            <button
+              key={tag}
+              onClick={() => setSearchTerm(tag)}
+            >
+              {tag}
+            </button>
+          ))}
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              style={{color:"crimson", backgroundColor:"crimson"}}
+            ></button>
+          )}
+        </div>
 
         {/* Body */}
         
