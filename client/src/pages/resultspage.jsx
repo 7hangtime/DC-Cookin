@@ -13,7 +13,8 @@ export default function ResultsPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
-  const[searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [dietType, setDietType] = useState("None");
    
   useEffect(() => {
     async function load() {
@@ -155,14 +156,14 @@ const filteredPartial = useMemo(() => {
                 backgroundColor: "darkgray"
               }}
               key={tag}
-              onClick={() => setSearchTerm(tag)}
+              onClick={() => setDietType(tag)}
             >
               {tag}
             </button>
           ))}
-          {searchTerm && (
+          {dietType !="None" && (
             <button
-              onClick={() => setSearchTerm('')}
+              onClick={() => setDietType('None')}
               style={{color:"black", backgroundColor:"crimson"}}
             >
               Clear

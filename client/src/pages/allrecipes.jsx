@@ -6,6 +6,7 @@ import {SEARCH_SUGGESTIONS, DIET_SUGGESTIONS} from "./resultspage.jsx"
 export default function AllRecipesPage() {
     const [recipes, setRecipes] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [dietType, setDietType] = useState("None");
     const [status, setStatus] = useState("loading");
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
@@ -130,14 +131,14 @@ export default function AllRecipesPage() {
                             backgroundColor: "darkgray"
                             }}
                             key={tag}
-                            onClick={() => setSearchTerm(tag)}
+                            onClick={() => setDietType(tag)}
                         >
                             {tag}
                         </button>
                         ))}
-                        {searchTerm && (
+                        {dietType !="None" && (
                         <button
-                            onClick={() => setSearchTerm('')}
+                            onClick={() => setDietType('None')}
                             style={{color:"black", backgroundColor:"crimson"}}
                         >
                             Clear
