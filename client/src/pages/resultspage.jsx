@@ -4,6 +4,7 @@ import { fetchMyPantryIngredientNames } from "../api/pantryApi";
 import { useNavigate } from "react-router-dom";
 
 export const SEARCH_SUGGESTIONS = ["Soup", "Burger", "Salad", "Pie", "Cake", "Cookie", "Candy"];
+export const DIET_SUGGESTIONS = ["Vegan", "Paleo", "Carnivore"];
 
 export default function ResultsPage() {
   const [pantryNames, setPantryNames] = useState([]);
@@ -139,7 +140,35 @@ const filteredPartial = useMemo(() => {
             </button>
           )}
         </div>
+        {/* diet options*/}
+        <div style={{
+          display: "flex",
+          gap: "8px",
+          position: "absolute",
+          right: "120px"
 
+        }}>
+          {DIET_SUGGESTIONS.map(tag => (
+            <button
+              style={{ 
+                borderRadius: "15px",
+                backgroundColor: "darkgray"
+              }}
+              key={tag}
+              onClick={() => setSearchTerm(tag)}
+            >
+              {tag}
+            </button>
+          ))}
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              style={{color:"black", backgroundColor:"crimson"}}
+            >
+              Clear
+            </button>
+          )}
+        </div>
         {/* Body */}
         
         <div className="results-shell-body">

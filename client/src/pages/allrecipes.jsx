@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import RecipeCard from "../components/recipecard.jsx";
 import { useNavigate } from "react-router-dom";
-import {SEARCH_SUGGESTIONS} from "./resultspage.jsx"
+import {SEARCH_SUGGESTIONS, DIET_SUGGESTIONS} from "./resultspage.jsx"
 
 export default function AllRecipesPage() {
     const [recipes, setRecipes] = useState([]);
@@ -112,6 +112,37 @@ export default function AllRecipesPage() {
                         Clear
                         </button>
                     )}
+                    </div>
+
+                    {/* diet options*/}
+                    <div style={{
+                        display: "flex",
+                        gap: "8px",
+                        position: "relative",
+                        left: "1500px",
+                        paddingBottom: "12px"
+            
+                    }}>
+                        {DIET_SUGGESTIONS.map(tag => (
+                        <button
+                            style={{ 
+                            borderRadius: "15px",
+                            backgroundColor: "darkgray"
+                            }}
+                            key={tag}
+                            onClick={() => setSearchTerm(tag)}
+                        >
+                            {tag}
+                        </button>
+                        ))}
+                        {searchTerm && (
+                        <button
+                            onClick={() => setSearchTerm('')}
+                            style={{color:"black", backgroundColor:"crimson"}}
+                        >
+                            Clear
+                        </button>
+                        )}
                     </div>
 
 
