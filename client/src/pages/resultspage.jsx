@@ -3,6 +3,8 @@ import RecipeCard from "../components/recipecard.jsx";
 import { fetchMyPantryIngredientNames } from "../api/pantryApi";
 import { useNavigate } from "react-router-dom";
 
+export const SEARCH_SUGGESTIONS = ["Soup", "Sandwich", "Burger", "Salad", "Pie", "Cake", "Cookie", "Candy"];
+
 export default function ResultsPage() {
   const [pantryNames, setPantryNames] = useState([]);
   const [matches, setMatches] = useState({ exactMatches: [], partialMatches: [] });
@@ -11,8 +13,7 @@ export default function ResultsPage() {
   const navigate = useNavigate();
 
   const[searchTerm, setSearchTerm] = useState('');
-  const SEARCH_SUGGESTIONS = ["Soup", "Sandwich", "Burger", "Salad", "Pie", "Cake", "Cookie", "Candy"];
-  
+   
   useEffect(() => {
     async function load() {
       try {
@@ -100,7 +101,7 @@ const filteredPartial = useMemo(() => {
           </div>
 
           <div className="results-shell-subtitle">
-            {matches.exactMatches.length} exact matches • {matches.partialMatches.length} partial matches
+            {filteredExact.length} exact matches • {filteredPartial.length} partial matches
           </div>
         </div>
 
@@ -150,7 +151,7 @@ const filteredPartial = useMemo(() => {
             <p>No exact matches yet.</p>
           ) : (
             <div className={`results-grid ${exactSingle ? "single" : ""}`}>
-              {matches.exactMatches.map((r) => (
+              {filteredExact.map((r) => (
                 <RecipeCard
                   key={r.id}
                   title={r.name}
@@ -172,7 +173,7 @@ const filteredPartial = useMemo(() => {
             <p>No partial matches yet.</p>
           ) : (
             <div className={`results-grid ${partialSingle ? "single" : ""}`}>
-              {matches.partialMatches.map(({ recipe, missing, matchPct }) => (
+              {filteredPartial.map(({ recipe, missing, matchPct }) => (
                 <RecipeCard
                   key={recipe.id}
                   title={recipe.name}
