@@ -15,6 +15,7 @@ export default function ResultsPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [dietType, setDietType] = useState("None");
+
    
   useEffect(() => {
     async function load() {

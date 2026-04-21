@@ -7,6 +7,7 @@ export default function AllRecipesPage() {
     const [recipes, setRecipes] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [dietType, setDietType] = useState("None");
+
     const [status, setStatus] = useState("loading");
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
