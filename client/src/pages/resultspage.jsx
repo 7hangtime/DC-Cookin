@@ -3,7 +3,7 @@ import RecipeCard from "../components/recipecard.jsx";
 import { fetchMyPantryIngredientNames } from "../api/pantryApi";
 import { useNavigate } from "react-router-dom";
 
-export const SEARCH_SUGGESTIONS = ["Soup", "Sandwich", "Burger", "Salad", "Pie", "Cake", "Cookie", "Candy"];
+export const SEARCH_SUGGESTIONS = ["Soup", "Burger", "Salad", "Pie", "Cake", "Cookie", "Candy"];
 
 export default function ResultsPage() {
   const [pantryNames, setPantryNames] = useState([]);

@@ -9,7 +9,6 @@ export default function AllRecipesPage() {
     const [status, setStatus] = useState("loading");
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
-    // const SEARCH_SUGGESTIONS = ["Soup", "Sandwich", "Burger", "Salad", "Pie", "Cake", "Cookie", "Candy"];
   
 
     useEffect(() => {
@@ -94,7 +93,8 @@ export default function AllRecipesPage() {
                     {/* quick search*/}
                     <div style={{
                     display: "flex",
-                    gap: "8px"
+                    gap: "10px",
+                    paddingBottom: "8px"
                     }}>
                     {SEARCH_SUGGESTIONS.map(tag => (
                         <button
