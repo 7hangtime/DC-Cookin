@@ -26,14 +26,15 @@ export default function ResultsPage() {
         const pantryItems = await fetchMyPantryIngredientNames();
         const names = pantryItems.map(p => p.name);
         setPantryNames(names);
-
+        console.log("pantryset: ", pantryItems)
         const preferencesMap = {};
         pantryItems.forEach(p => {
-            if (p.preference !== undefined) {
-              preferencesMap[p.name] = p.preference;
-            }
+          if (p.preference != null && p.preference != undefined) {
+            preferencesMap[p.name] = p.preference;
           }
-        )
+        }
+        );
+        console.log("preference maps:", preferencesMap)
 
         const res = await fetch("http://localhost:3001/api/recipes/matches", {
           method: "POST",
@@ -107,7 +108,7 @@ const filteredPartial = useMemo(() => {
             {filteredExact.length} exact matches • {filteredPartial.length} partial matches
           </div>
         </div>
-
+        
         {/* Search Bar*/}
         <div className="recipes-search-wrap"
           style={{ paddingTop: "25px"}} >

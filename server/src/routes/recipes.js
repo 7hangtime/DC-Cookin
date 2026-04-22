@@ -49,12 +49,13 @@ export default function recipesRouter(recipesData) {
 
     router.post("/matches", (req, res) => {
         const pantry = req.body?.ingredients;
+        const preferences = req.body?.preferences || {};
         if (!Array.isArray(pantry)) {
             return res.status(400).json({ error: "Body must include ingredients: string[]" });
         }
 
         const maxMissing = Number(req.body?.maxMissing ?? 2);
-        const result = matchRecipes(recipesData, pantry, { maxMissing });
+        const result = matchRecipes(recipesData, pantry, { maxMissing, preferences });
         return res.json(result);
     });
 
