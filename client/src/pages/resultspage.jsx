@@ -26,7 +26,7 @@ export default function ResultsPage() {
         const pantryItems = await fetchMyPantryIngredientNames();
         const names = pantryItems.map(p => p.name);
         setPantryNames(names);
-        console.log("pantryset: ", pantryItems)
+        // console.log("pantryset: ", pantryItems)
         const preferencesMap = {};
         pantryItems.forEach(p => {
           if (p.preference != null && p.preference != undefined) {
@@ -34,7 +34,7 @@ export default function ResultsPage() {
           }
         }
         );
-        console.log("preference maps:", preferencesMap)
+        // console.log("preference maps:", preferencesMap)
 
         const res = await fetch("http://localhost:3001/api/recipes/matches", {
           method: "POST",

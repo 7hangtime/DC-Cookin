@@ -17,14 +17,14 @@ function norm(s) {
 export function matchRecipes(recipes, pantryNames, { maxMissing = 2, preferences = {} } = {}) {
     const pantrySet = new Set((pantryNames || []).map(norm).filter(Boolean));
     // console.log("pantry:", pantrySet)
-    console.log("pref:", preferences)
+    // console.log("pref:", preferences)
     const avoidedIngs =
         Object.entries(preferences)
             .filter(([_, pref]) => String(pref) === "-1")
             .map(([name]) => norm(name))
             .filter(Boolean);
   
-    console.log("Ingredients avoided list:", avoidedIngs)
+    // console.log("Ingredients avoided list:", avoidedIngs)
 
     const exactMatches = [];
     const partialMatches = [];
