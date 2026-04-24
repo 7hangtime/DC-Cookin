@@ -21,6 +21,9 @@ export default function RecipeDetails() {
   const [averageRating, setAverageRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
   const [reviewError, setReviewError] = useState("");
+  const [city, setCity] = useState("Charlotte");
+  const [stores, setStores] = useState([]);
+  const [loadingStores, setLoadingStores] = useState(false);
 
   const [reviews, setReviews] = useState([
     { user: "Alice", rating: 5, comment: "Loved this recipe!" },
@@ -206,7 +209,159 @@ export default function RecipeDetails() {
       </div>
       <div style={styles.contentContainer}>
         <div style={styles.card}></div>
+        <section style={styles.sectionReviews}>
+          <h2 style={styles.sectionTitle}>Find Stores</h2>
 
+          {/* CITY SELECT DROPDOWN */}
+          <select
+            value={city}
+            onChange={(e) => {
+              setCity(e.target.value);
+              setStores([]); 
+            }}
+            style={{ marginBottom: "1rem", padding: "0.5rem" }}
+          >
+            <option value="Charlotte">Charlotte</option>
+            <option value="Raleigh">Raleigh</option>
+            <option value="Atlanta">Atlanta</option>
+            <option value="Orlando">Orlando</option>
+          </select>
+
+          {/* BUTTON */}
+          <div>
+            <button
+              style={styles.submitButton}
+              onClick={async () => {
+                setLoadingStores(true);
+
+                const res = await fetch(
+                  `http://localhost:3001/api/stores/match/${recipe.id}?city=${city}`
+                );
+
+                const data = await res.json();
+                setStores(data);
+                setLoadingStores(false);
+              }}
+            >
+              Find Stores
+            </button>
+          </div>
+
+          {/* RESULTS */}
+          {loadingStores && <p>Loading stores...</p>}
+
+          {stores.length > 0 && (
+            <div
+              style={{
+                display: "grid",
+                gap: "1rem",
+                marginTop: "1rem",
+              }}
+            >
+              {stores.map((store) => (
+                <div
+                  key={store.id}
+                  style={{
+                    backgroundColor: "#fffdf8",
+                    borderRadius: "14px",
+                    padding: "1.2rem",
+                    boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+                    border: "1px solid #f0e4d7",
+                    width: "100%",
+                  }}
+                >
+                  {/* Top Row */}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "0.8rem",
+                    }}
+                  >
+                    <div>
+                      <h3
+                        style={{
+                          margin: 0,
+                          fontSize: "1.15rem",
+                          color: "#7a4f2e",
+                        }}
+                      >
+                        {store.name}
+                      </h3>
+
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize: "0.9rem",
+                          color: "#777",
+                        }}
+                      >
+                        {city}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => navigate(`/stores/${store.id}`)}
+                      style={{
+                        padding: "8px 14px",
+                        borderRadius: "8px",
+                        border: "none",
+                        backgroundColor: "#7a4f2e",
+                        color: "white",
+                        cursor: "pointer",
+                        fontWeight: "600",
+                      }}
+                    >
+                      View Inventory
+                    </button>
+                  </div>
+
+                  {/* Match Count */}
+                  <div
+                    style={{
+                      marginBottom: "0.8rem",
+                      fontSize: "0.95rem",
+                      color: "#444",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {store.availableIngredients.length} Ingredients Available
+                  </div>
+
+                  {/* Ingredient Pills */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    {store.availableIngredients.map((ing, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          backgroundColor: "#f4ede6",
+                          color: "#5a3824",
+                          padding: "6px 10px",
+                          borderRadius: "999px",
+                          fontSize: "0.85rem",
+                          fontWeight: "500",
+                        }}
+                      >
+                        {ing}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {stores.length === 0 && !loadingStores && (
+            <p>No stores found yet. Try selecting a city and searching.</p>
+          )}
+        </section>
         {/* Reviews */}
         <section style={styles.sectionReviews}>
           <h2 style={styles.sectionTitle}>Reviews & Ratings</h2>
@@ -249,7 +404,7 @@ export default function RecipeDetails() {
               style={styles.textarea}
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              disabled={!user} 
+              disabled={!user}
             />
             <label style={styles.label}>
               Rating:
@@ -257,7 +412,7 @@ export default function RecipeDetails() {
                 style={styles.select}
                 value={newRating}
                 onChange={(e) => setNewRating(Number(e.target.value))}
-                disabled={!user} 
+                disabled={!user}
               >
                 {[5, 4, 3, 2, 1].map((n) => (
                   <option key={n} value={n}>
