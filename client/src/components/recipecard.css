@@ -272,6 +272,10 @@
   max-width: 780px;
 }
 
+.saved-recipes-header {
+  background: linear-gradient(90deg, #d4a017, #f7c948);
+}
+
 .recipe-card.saved {
   background: #fff8e1;
   border-color: #ffe082;
