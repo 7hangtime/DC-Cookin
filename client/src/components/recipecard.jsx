@@ -12,7 +12,7 @@ export default function RecipeCard({
   onUnsave,
   variant = "exact",
   matchPctNumber = null,
-  showSaveButton,
+  showSaveButton = false,
   showUnsaveButton = false,
 }) {
   const isExact = variant === "exact";
@@ -78,15 +78,26 @@ export default function RecipeCard({
                   <span>{matchPercent}</span>
                 </div>
 
-                <button className={`recipe-card-button ${variant}`} onClick={onView}>
-                  View Recipe
-                </button>
+                <div className="recipe-card-actions inline">
+                  {showSaveButton && (
+                    <button className="recipe-card-button save" onClick={onSave}>
+                      <span className="recipe-card-button-icon">🔖</span>
+                      Save Recipe
+                    </button>
+                  )}
+
+                  <button className={`recipe-card-button ${variant}`} onClick={onView}>
+                    View Recipe
+                  </button>
+                </div>
               </div>
 
               <div className="recipe-card-progress">
                 <div
                   className="recipe-card-progress-fill"
-                  style={{ width: `${Math.max(0, Math.min(100, matchPctNumber))}%` }}
+                  style={{
+                    width: `${Math.max(0, Math.min(100, matchPctNumber))}%`,
+                  }}
                 />
               </div>
             </div>

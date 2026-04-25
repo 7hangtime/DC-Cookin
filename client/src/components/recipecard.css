@@ -370,3 +370,31 @@
   border-color: #1f6feb;
   box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.12);
 }
+
+.recipe-card-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.recipe-card-actions.inline {
+  margin-top: 0;
+  justify-content: flex-end;
+}
+
+.recipe-card-button.save {
+  background: #e3f2fd;
+  color: #163a5f;
+  border: 1px solid #bbdefb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.recipe-card-button-icon {
+  font-size: 18px;
+  line-height: 1;
+}
