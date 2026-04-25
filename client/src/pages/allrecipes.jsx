@@ -70,7 +70,7 @@ export default function AllRecipesPage() {
 
     async function handleSaveRecipe(recipeId) {
         try {
-            await saveRecipe(recipeId, userId);
+            await saveRecipe(recipeId);
         } catch (err) {
             console.error("Failed to save recipe:", err);
         }
