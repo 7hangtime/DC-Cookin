@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import RecipeCard from "../components/recipecard.jsx";
 import { useNavigate } from "react-router-dom";
 import { SEARCH_SUGGESTIONS, DIET_SUGGESTIONS } from "./resultspage.jsx"
+import { saveRecipe } from "../api/saveRecipe.js";
 
 export default function AllRecipesPage() {
     const [recipes, setRecipes] = useState([]);
