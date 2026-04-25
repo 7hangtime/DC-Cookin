@@ -9,6 +9,7 @@ export default function AllRecipesPage() {
     const [savedRecipeIds, setSavedRecipeIds] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [dietType, setDietType] = useState("None");
+    const [ratingsMap, setRatingsMap] = useState({});
 
     const [status, setStatus] = useState("loading");
     const [errorMsg, setErrorMsg] = useState("");
@@ -41,10 +42,45 @@ export default function AllRecipesPage() {
         loadRecipes();
     }, []);
 
+    useEffect(() => {
+    async function fetchRatings() {
+            const entries = await Promise.all(
+                recipes.map(async (r) => {
+                    try {
+                        const res = await fetch(
+                            `http://localhost:3001/api/reviews/${r.id}/average`
+                        );
+
+                        if (!res.ok) {
+                            throw new Error("Failed to fetch rating");
+                        }
+
+                        const data = await res.json();
+                        return [r.id, data.average_rating || 0];
+                    } catch {
+                        return [r.id, 0];
+                    }
+                })
+            );
+
+            setRatingsMap(Object.fromEntries(entries));
+        }
+
+        if (recipes.length) {
+            fetchRatings();
+        }
+    }, [recipes]);
+
+    const sortedRecipes = useMemo(() => {
+        return [...recipes].sort(
+            (a, b) => (ratingsMap[b.id] || 0) - (ratingsMap[a.id] || 0)
+        );
+    }, [recipes, ratingsMap]);
+
     const filteredRecipes = useMemo(() => {
         const term = searchTerm.trim().toLowerCase();
 
-        let filtered = recipes;
+        let filtered = sortedRecipes;
 
         if (term) {
             filtered = filtered.filter((recipe) => {
@@ -73,7 +109,7 @@ export default function AllRecipesPage() {
         }
 
         return filtered;
-    }, [recipes, searchTerm, dietType]);
+    }, [sortedRecipes, searchTerm, dietType]);
 
     async function handleSaveRecipe(recipeId) {
         try {
@@ -91,8 +127,8 @@ export default function AllRecipesPage() {
         }
     }
 
-    if (status === "loading") {
-        return <div style={{ padding: 40 }}>Loading recipes...</div>;
+    if ( status === "loading" || recipes.length === 0 || Object.keys(ratingsMap).length !== recipes.length) {
+    return <div style={{ padding: 40 }}>Loading recipes...</div>;
     }
 
     if (status === "error") {
@@ -198,6 +234,7 @@ export default function AllRecipesPage() {
                                 return (
                                     <RecipeCard
                                         key={recipe.id}
+                                        recipeId={recipe.id}
                                         title={recipe.name}
                                         cookTime={recipe.timeMinutes ? `${recipe.timeMinutes} min` : ""}
                                         variant={isSaved ? "saved" : "browse"}

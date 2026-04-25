@@ -297,6 +297,7 @@ export default function ResultsPage() {
                 return (
                   <RecipeCard
                     key={recipe.id}
+                    recipeId={recipe.id}
                     title={recipe.name}
                     cookTime={recipe.timeMinutes ? `${recipe.timeMinutes} min` : ""}
                     variant={isSaved ? "saved" : "partial"}

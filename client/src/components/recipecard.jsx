@@ -1,4 +1,5 @@
 import "./recipecard.css";
+import { useEffect, useState } from "react";
 
 export default function RecipeCard({
   title = "Recipe Name",
@@ -20,6 +21,8 @@ export default function RecipeCard({
   const isPartial = variant === "partial";
   const isBrowse = variant === "browse";
   const isSaved = variant === "saved";
+  const [avgRating, setAvgRating] = useState(null);
+  const [reviewCount, setReviewCount] = useState(0);
 
   useEffect(() => {
     async function fetchAverage() {
@@ -52,7 +55,13 @@ export default function RecipeCard({
 
       <div className="recipe-card-content">
         <div className="recipe-card-header">
-          <h3 className="recipe-card-title">{title}</h3>
+          <h3 className="recipe-card-title">{title}
+            {avgRating !== null ? (
+              <p>⭐ {avgRating.toFixed(1)} ({reviewCount})</p>
+            ) : (
+              <p>⭐0.0 (0)</p>
+            )}
+          </h3>
           <div className="recipe-card-time">⏱ Cook time: {cookTime}</div>
         </div>
 
