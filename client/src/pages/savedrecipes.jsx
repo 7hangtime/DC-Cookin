@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import RecipeCard from "../components/recipecard.jsx";
 import { useNavigate } from "react-router-dom";
+import { fetchMySavedRecipes, removeSavedRecipe } from "../api/saveRecipe.js";
 
 export default function SavedRecipesPage() {
     const [savedRecipes, setSavedRecipes] = useState([]);
@@ -9,24 +10,12 @@ export default function SavedRecipesPage() {
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
 
-    const userId = localStorage.getItem("user_id");
-
     useEffect(() => {
         async function loadSavedRecipes() {
             try {
                 setStatus("loading");
 
-                const res = await fetch("http://localhost:3001/api/saved-recipes", {
-                    headers: {
-                        "x-user-id": userId,
-                    },
-                });
-
-                const data = await res.json();
-
-                if (!res.ok) {
-                    throw new Error(data?.error || "Failed to fetch saved recipes");
-                }
+                const data = await fetchMySavedRecipes();
 
                 setSavedRecipes(data);
                 setStatus("success");
@@ -37,7 +26,7 @@ export default function SavedRecipesPage() {
         }
 
         loadSavedRecipes();
-    }, [userId]);
+    }, []);
 
     const filteredRecipes = useMemo(() => {
         const term = searchTerm.trim().toLowerCase();
@@ -57,16 +46,7 @@ export default function SavedRecipesPage() {
 
     async function handleUnsave(recipeId) {
         try {
-            const res = await fetch(`http://localhost:3001/api/saved-recipes/${recipeId}`, {
-                method: "DELETE",
-                headers: {
-                    "x-user-id": userId,
-                },
-            });
-
-            if (!res.ok) {
-                throw new Error("Failed to unsave recipe");
-            }
+            await removeSavedRecipe(recipeId);
 
             setSavedRecipes((currentRecipes) =>
                 currentRecipes.filter((recipe) => recipe.id !== recipeId)
