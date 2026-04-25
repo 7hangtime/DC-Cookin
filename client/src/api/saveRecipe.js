@@ -33,7 +33,7 @@ export async function fetchMySavedRecipes() {
 export async function saveRecipe(recipeId) {
     const userId = await getCurrentUserId();
 
-    const res = await fetch('http://localhost:3001/api/saved-recipes/${recipeId}', {
+    const res = await fetch(`http://localhost:3001/api/saved-recipes/${recipeId}`, {
         method: "POST",
         headers: {
             "x-user-id": userId,
@@ -52,7 +52,7 @@ export async function saveRecipe(recipeId) {
 export async function removeSavedRecipe(recipeId) {
     const userId = await getCurrentUserId();
 
-    const res = await fetch('http://localhost:3001/api/saved-recipes/${recipeId}', {
+    const res = await fetch(`http://localhost:3001/api/saved-recipes/${recipeId}`, {
         method: "DELETE",
         headers: {
             "x-user-id": userId,
