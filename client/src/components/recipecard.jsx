@@ -2,6 +2,7 @@ import "./recipecard.css";
 
 export default function RecipeCard({
   title = "Recipe Name",
+  recipeId,
   cookTime = "Cook Time",
   matchPercent = "",
   missingText = "",
@@ -19,6 +20,25 @@ export default function RecipeCard({
   const isPartial = variant === "partial";
   const isBrowse = variant === "browse";
   const isSaved = variant === "saved";
+
+  useEffect(() => {
+    async function fetchAverage() {
+      try {
+        const res = await fetch(
+          `http://localhost:3001/api/reviews/${recipeId}/average`
+        );
+        if (!res.ok) throw new Error("Failed to fetch rating");
+
+        const data = await res.json();
+        setAvgRating(data.average_rating);
+        setReviewCount(data.review_count);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    if (recipeId) fetchAverage();
+  }, [recipeId]);
 
   return (
     <div className={`recipe-card ${variant}`}>
