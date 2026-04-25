@@ -1,27 +1,64 @@
-// The code below is a React component that checks if a user is authenticated using Supabase. If the user is not authenticated, it redirects them to the login page. If the user is authenticated, it renders the children components.
-import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import { supabase } from "../../supabase";
 
-// This component is used to protect routes that require authentication.
+// We use this component to protect routes that require authentication. If the user is not authenticated, they will be redirected to the login page.
 export default function RequireAuth({ children }) {
-  const [session, setSession] = useState(undefined); // undefined means we don't know yet
+  const [session, setSession] = useState(undefined);
+  const [expired, setExpired] = useState(false);
+  const location = useLocation();
 
-// Here we check if the user is authenticated using Supabase. If the user is not authenticated, we redirect them to the login page. If the user is authenticated, we render the children components.
+  const hadSession = useRef(false);
+
   useEffect(() => {
+// This function is used to check if the user is authenticated. If the user is authenticated, the user will be redirected to the home page. If the user is not authenticated, the user will be redirected to the login page.
     supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session ?? null);
+      const s = data.session ?? null;
+      if (s) hadSession.current = true;
+      setSession(s);
     });
-// Here we listen for changes in the authentication state. If the user logs in or out, we update the session state.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session ?? null);
+
+// This function is used to check if the user is authenticated. If the user is authenticated, the user will be redirected to the home page. If the user is not authenticated, the user will be redirected to the login page.
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, newSession) => {
+      if (
+        event === "SIGNED_OUT" ||
+        event === "TOKEN_REFRESHED" && !newSession
+      ) {
+
+        if (hadSession.current) setExpired(true);
+        setSession(null);
+      } else if (newSession) {
+        hadSession.current = true;
+        setSession(newSession);
+      } else {
+        setSession(null);
+      }
     });
-// This will be called when the component is unmounted. It unsubscribes from the authentication state changes.
+
     return () => subscription.unsubscribe();
   }, []);
-// If the session is undefined, we return null. This means we don't know yet if the user is authenticated or not. If the session is null, we redirect the user to the login page. If the session is not null, we render the
+
+
   if (session === undefined) return null;
-  if (session === null) return <Navigate to="/login" replace />;
+
+
+  if (session === null) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{
+          from: location.pathname,
+          sessionExpired: expired || hadSession.current,
+        }}
+      />
+    );
+  }
+
+
   return children;
 }
-// End of Code.
+
+// End of Program
