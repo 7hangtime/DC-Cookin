@@ -4,6 +4,7 @@ import recipesRouter from './routes/recipes.js';
 import ingredientsRouter from "./routes/ingredients.js";
 import reviewsRouter from "./routes/reviews.js";
 import storesRouter from "./routes/stores.js"
+import savedRecipesRoutes from "./routes/savedrecipes.js";
 import cors from "cors";
 import fs from "node:fs";
 
@@ -21,8 +22,10 @@ app.use(express.json())
 app.use("/api/pantry", pantryRouter);
 app.use("/api/recipes", recipesRouter(recipes));
 app.use("/api/ingredients", ingredientsRouter);
-app.use("/api/reviews", reviewsRouter); 
+app.use("/api/reviews", reviewsRouter);
 app.use("/api/stores", storesRouter)
+app.use("/api/saved-recipes", savedRecipesRoutes);
+
 
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
