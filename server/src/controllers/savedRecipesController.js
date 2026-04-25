@@ -4,9 +4,19 @@ import {
     saveRecipeByUserId
 } from "../services/savedRecipesService.js";
 
+function getUserIdFromRequest(req) {
+    const userId = req.headers["x-user-id"];
+
+    if (!userId || userId === "null" || userId === "undefined") {
+        return null;
+    }
+
+    return userId;
+}
+
 export async function getSavedRecipes(req, res) {
     try {
-        const userId = req.headers["x-user-id"];
+        const userId = getUserIdFromRequest(req);
 
         if (!userId) {
             return res.status(401).json({ error: "User ID is required" });
@@ -23,7 +33,7 @@ export async function getSavedRecipes(req, res) {
 
 export async function deleteSavedRecipe(req, res) {
     try {
-        const userId = req.headers["x-user-id"];
+        const userId = getUserIdFromRequest(req);
         const { recipeId } = req.params;
 
         if (!userId) {
@@ -41,7 +51,7 @@ export async function deleteSavedRecipe(req, res) {
 
 export async function saveRecipe(req, res) {
     try {
-        const userId = req.headers["x-user-id"];
+        const userId = getUserIdFromRequest(req);
         const { recipeId } = req.params;
 
         if (!userId) {
