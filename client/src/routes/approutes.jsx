@@ -11,6 +11,7 @@ import RequireAuth from "../components/RequireAuth.jsx";
 import RedirectIfAuth from "../components/RedirectIfAuth.jsx";
 import StoresList from "../pages/storeslist";
 import StoreInventory from "../pages/storeinventory.jsx"
+import SavedRecipesPage from "../pages/savedrecipes.jsx";
 
 
 
@@ -92,6 +93,16 @@ export default function AppRoutes() {
           </RequireAuth>
         }
       />
+
+      <Route
+        path="/saved-recipes"
+        element={
+          <RequireAuth>
+            <SavedRecipesPage />
+          </RequireAuth>
+        }
+      />
+
     </Routes>
   );
 }
