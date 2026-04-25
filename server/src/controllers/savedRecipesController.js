@@ -54,7 +54,7 @@ export async function saveRecipe(req, res) {
         const userId = getUserIdFromRequest(req);
         const { recipeId } = req.params;
 
-        if (!userId) {
+        if (!userId || userId === "null" || userId === "undefined") {
             return res.status(401).json({ error: "User ID is required" });
         }
 
