@@ -1,6 +1,7 @@
 import {
     findSavedRecipeIdsByUserId,
     deleteSavedRecipeByUserId,
+    saveRecipeByUserId
 } from "../services/savedRecipesService.js";
 
 export async function getSavedRecipes(req, res) {
@@ -35,5 +36,23 @@ export async function deleteSavedRecipe(req, res) {
     } catch (error) {
         console.error("Error deleting saved recipe:", error);
         return res.status(500).json({ error: "Failed to delete saved recipe" });
+    }
+}
+
+export async function saveRecipe(req, res) {
+    try {
+        const userId = req.headers["x-user-id"];
+        const { recipeId } = req.params;
+
+        if (!userId) {
+            return res.status(401).json({ error: "User ID is required" });
+        }
+
+        await saveRecipeByUserId(userId, recipeId);
+
+        return res.status(201).json({ message: "Recipe saved successfully" });
+    } catch (error) {
+        console.error("Error saving recipe:", error);
+        return res.status(500).json({ error: "Failed to save recipe" });
     }
 }

@@ -45,3 +45,21 @@ export async function deleteSavedRecipeByUserId(userId, recipeId) {
         throw error;
     }
 }
+
+export async function saveRecipeByUserId(userId, recipeId) {
+    const { error } = await supabase
+        .from("saved_recipes")
+        .upsert(
+            {
+                user_id: userId,
+                recipe_id: recipeId,
+            },
+            {
+                onConflict: "user_id,recipe_id",
+            }
+        );
+
+    if (error) {
+        throw error;
+    }
+}
