@@ -8,12 +8,15 @@ export default function RecipeCard({
   ingredientsText = "ingredients",
   imageUrl = "",
   onView,
+  onUnsave,
   variant = "exact",
   matchPctNumber = null,
+  showUnsaveButton = false,
 }) {
   const isExact = variant === "exact";
   const isPartial = variant === "partial";
   const isBrowse = variant === "browse";
+  const isSaved = variant === "saved";
 
   return (
     <div className={`recipe-card ${variant}`}>
@@ -53,6 +56,13 @@ export default function RecipeCard({
             </div>
           )}
 
+          {isSaved && (
+            <div className="recipe-card-status saved">
+              <span className="status-icon">⭐</span>
+              <span>Saved recipe</span>
+            </div>
+          )}
+
           <div className="recipe-card-ingredients">
             <span className="status-icon">🍱</span>
             <span>{ingredientsText}</span>
@@ -80,11 +90,17 @@ export default function RecipeCard({
             </div>
           )}
 
-          {(isExact || isBrowse) && (
+          {(isExact || isBrowse || isSaved) && (
             <div className="recipe-card-actions">
               <button className={`recipe-card-button ${variant}`} onClick={onView}>
                 View Recipe
               </button>
+
+              {showUnsaveButton && (
+                <button className="recipe-card-button unsave" onClick={onUnsave}>
+                  Unsave Recipe
+                </button>
+              )}
             </div>
           )}
         </div>
