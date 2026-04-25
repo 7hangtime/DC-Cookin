@@ -10,12 +10,12 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-// This useEffect hook is used to check if the user is logged in. If the user is logged in, the user object is stored in the state. If the user is not logged in, the user object is set to null.
+    // This useEffect hook is used to check if the user is logged in. If the user is logged in, the user object is stored in the state. If the user is not logged in, the user object is set to null.
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
     });
 
-// This useEffect hook is used to listen for changes in the user's authentication state. If the user logs in or out, the user object is updated in the state.
+    // This useEffect hook is used to listen for changes in the user's authentication state. If the user logs in or out, the user object is updated in the state.
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
@@ -26,7 +26,7 @@ export default function Navbar() {
   }, []);
 
   async function handleLogout() {
-// This function is used to log the user out of the application. It uses the supabase.auth.signOut() method to sign the user out. If there is an error, it is logged to the console. The user is then redirected to the login page.
+    // This function is used to log the user out of the application. It uses the supabase.auth.signOut() method to sign the user out. If there is an error, it is logged to the console. The user is then redirected to the login page.
     const { error } = await supabase.auth.signOut({ scope: "global" });
 
     if (error) {
@@ -36,7 +36,7 @@ export default function Navbar() {
 
     navigate("/login");
   }
-// This is the JSX that is returned by the component. It includes the navigation bar with links to different pages of the application and a logout button if the user is logged in.
+  // This is the JSX that is returned by the component. It includes the navigation bar with links to different pages of the application and a logout button if the user is logged in.
   return (
     <header className="nav">
       <div className="nav-inner">
@@ -80,6 +80,13 @@ export default function Navbar() {
             className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
           >
             Stores
+          </NavLink>
+
+          <NavLink
+            to="/saved-recipes"
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          >
+            Saved Recipes
           </NavLink>
         </nav>
 
