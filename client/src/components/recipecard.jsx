@@ -8,9 +8,11 @@ export default function RecipeCard({
   ingredientsText = "ingredients",
   imageUrl = "",
   onView,
+  onSave,
   onUnsave,
   variant = "exact",
   matchPctNumber = null,
+  showSaveButton,
   showUnsaveButton = false,
 }) {
   const isExact = variant === "exact";
@@ -92,6 +94,13 @@ export default function RecipeCard({
 
           {(isExact || isBrowse || isSaved) && (
             <div className="recipe-card-actions">
+              {showSaveButton && (
+                <button className="recipe-card-button save" onClick={onSave}>
+                  <span className="recipe-card-button-icon">🔖</span>
+                  Save Recipe
+                </button>
+              )}
+
               <button className={`recipe-card-button ${variant}`} onClick={onView}>
                 View Recipe
               </button>
