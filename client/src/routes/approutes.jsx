@@ -12,6 +12,7 @@ import RedirectIfAuth from "../components/RedirectIfAuth.jsx";
 import StoresList from "../pages/storeslist";
 import StoreInventory from "../pages/storeinventory.jsx"
 import SavedRecipesPage from "../pages/savedrecipes.jsx";
+import RecipeAdd from "../pages/recipeadd.jsx"
 
 
 
@@ -103,6 +104,14 @@ export default function AppRoutes() {
         }
       />
 
+      <Route
+        path="/recipe-add"
+        element={
+          <RequireAuth>
+            <RecipeAdd />
+          </RequireAuth>
+        }
+      />
     </Routes>
   );
 }
