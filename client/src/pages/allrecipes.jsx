@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import RecipeCard from "../components/recipecard.jsx";
 import { useNavigate } from "react-router-dom";
-import {SEARCH_SUGGESTIONS, DIET_SUGGESTIONS} from "./resultspage.jsx"
+import { SEARCH_SUGGESTIONS, DIET_SUGGESTIONS } from "./resultspage.jsx"
 
 export default function AllRecipesPage() {
     const [recipes, setRecipes] = useState([]);
@@ -11,7 +11,7 @@ export default function AllRecipesPage() {
     const [status, setStatus] = useState("loading");
     const [errorMsg, setErrorMsg] = useState("");
     const navigate = useNavigate();
-  
+
 
     useEffect(() => {
         async function loadRecipes() {
@@ -67,6 +67,14 @@ export default function AllRecipesPage() {
 
     const single = filteredRecipes.length === 1;
 
+    async function handleSaveRecipe(recipeId) {
+        try {
+            await saveRecipe(recipeId, userId);
+        } catch (err) {
+            console.error("Failed to save recipe:", err);
+        }
+    }
+
     return (
         <div style={{ padding: 40 }}>
             <div className="results-shell">
@@ -91,29 +99,29 @@ export default function AllRecipesPage() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    
+
                     {/* quick search*/}
                     <div style={{
-                    display: "flex",
-                    gap: "10px",
-                    paddingBottom: "8px"
+                        display: "flex",
+                        gap: "10px",
+                        paddingBottom: "8px"
                     }}>
-                    {SEARCH_SUGGESTIONS.map(tag => (
-                        <button
-                        key={tag}
-                        onClick={() => setSearchTerm(tag)}
-                        >
-                        {tag}
-                        </button>
-                    ))}
-                    {searchTerm && (
-                        <button
-                        onClick={() => setSearchTerm('')}
-                        style={{color:"black", backgroundColor:"crimson"}}
-                        >
-                        Clear
-                        </button>
-                    )}
+                        {SEARCH_SUGGESTIONS.map(tag => (
+                            <button
+                                key={tag}
+                                onClick={() => setSearchTerm(tag)}
+                            >
+                                {tag}
+                            </button>
+                        ))}
+                        {searchTerm && (
+                            <button
+                                onClick={() => setSearchTerm('')}
+                                style={{ color: "black", backgroundColor: "crimson" }}
+                            >
+                                Clear
+                            </button>
+                        )}
                     </div>
 
                     {/* diet options*/}
@@ -123,27 +131,27 @@ export default function AllRecipesPage() {
                         position: "relative",
                         left: "1500px",
                         paddingBottom: "12px"
-            
+
                     }}>
                         {DIET_SUGGESTIONS.map(tag => (
-                        <button
-                            style={{ 
-                            borderRadius: "15px",
-                            backgroundColor: "darkgray"
-                            }}
-                            key={tag}
-                            onClick={() => setDietType(tag)}
-                        >
-                            {tag}
-                        </button>
+                            <button
+                                style={{
+                                    borderRadius: "15px",
+                                    backgroundColor: "darkgray"
+                                }}
+                                key={tag}
+                                onClick={() => setDietType(tag)}
+                            >
+                                {tag}
+                            </button>
                         ))}
-                        {dietType !="None" && (
-                        <button
-                            onClick={() => setDietType('None')}
-                            style={{color:"black", backgroundColor:"crimson"}}
-                        >
-                            Clear
-                        </button>
+                        {dietType != "None" && (
+                            <button
+                                onClick={() => setDietType('None')}
+                                style={{ color: "black", backgroundColor: "crimson" }}
+                            >
+                                Clear
+                            </button>
                         )}
                     </div>
 
@@ -160,6 +168,8 @@ export default function AllRecipesPage() {
                                     variant="browse"
                                     ingredientsText={(recipe.ingredients_with_measurements?.slice(0, 3) || recipe.ingredients || []).join(", ")}
                                     imageUrl={recipe.image_url || ""}
+                                    showSaveButton={true}
+                                    onSave={() => handleSaveRecipe(recipe.id)}
                                     onView={() => navigate(`/recipe/${recipe.id}`, { state: { recipe } })}
                                 />
                             ))}
