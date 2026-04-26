@@ -2,6 +2,7 @@
   {
     "id": "no-bake-nut-cookies",
     "name": "No-Bake Nut Cookies",
+    "is_vegan": false,
     "ingredients": [
       "brown sugar",
       "milk",
@@ -31,6 +32,7 @@
   {
     "id": "jewell-balls-chicken",
     "name": "Jewell Ball'S Chicken",
+    "is_vegan": false,
     "ingredients": [
       "beef",
       "chicken breasts",
@@ -53,6 +55,7 @@
   {
     "id": "creamy-corn",
     "name": "Creamy Corn",
+    "is_vegan": false,
     "ingredients": [
       "frozen corn",
       "cream cheese",
@@ -77,6 +80,7 @@
   {
     "id": "chicken-funny",
     "name": "Chicken Funny",
+    "is_vegan": false,
     "ingredients": [
       "chicken",
       "chicken gravy",
@@ -103,6 +107,7 @@
   {
     "id": "reeses-cups-candy",
     "name": "Reeses Cups(Candy)",
+    "is_vegan": false,
     "ingredients": [
       "peanut butter",
       "graham cracker crumbs",
@@ -127,6 +132,7 @@
   {
     "id": "cheeseburger-potato-soup",
     "name": "Cheeseburger Potato Soup",
+    "is_vegan": false,
     "ingredients": [
       "baking potatoes",
       "extra lean ground beef",
@@ -174,6 +180,7 @@
   {
     "id": "rhubarb-coffee-cake",
     "name": "Rhubarb Coffee Cake",
+    "is_vegan": false,
     "ingredients": [
       "sugar",
       "butter",
@@ -210,6 +217,7 @@
   {
     "id": "scalloped-corn",
     "name": "Scalloped Corn",
+    "is_vegan": false,
     "ingredients": [
       "cream-style corn",
       "whole kernel corn",
@@ -236,6 +244,7 @@
   {
     "id": "nolans-pepper-steak",
     "name": "Nolan'S Pepper Steak",
+    "is_vegan": false,
     "ingredients": [
       "tomatoes",
       "water",
@@ -267,6 +276,7 @@
   {
     "id": "millionaire-pie",
     "name": "Millionaire Pie",
+    "is_vegan": false,
     "ingredients": [
       "pineapple",
       "condensed milk",
@@ -300,6 +310,7 @@
   {
     "id": "double-cherry-delight",
     "name": "Double Cherry Delight",
+    "is_vegan": true,
     "ingredients": [
       "dark sweet pitted cherries",
       "ginger ale",
@@ -332,6 +343,7 @@
   {
     "id": "buckeye-candy",
     "name": "Buckeye Candy",
+    "is_vegan": false,
     "ingredients": [
       "powdered sugar",
       "butter",
@@ -357,6 +369,7 @@
   {
     "id": "quick-barbecue-wings",
     "name": "Quick Barbecue Wings",
+    "is_vegan": false,
     "ingredients": [
       "chicken",
       "flour",
@@ -379,6 +392,7 @@
   {
     "id": "taco-salad-chip-dip",
     "name": "Taco Salad Chip Dip",
+    "is_vegan": false,
     "ingredients": [
       "taco sauce",
       "sour cream",
@@ -417,6 +431,7 @@
   {
     "id": "pink-stuff-frozen-dessert",
     "name": "Pink Stuff(Frozen Dessert)",
+    "is_vegan": true,
     "ingredients": [
       "pie filling",
       "pineapple",
@@ -440,6 +455,7 @@
   {
     "id": "fresh-strawberry-pie",
     "name": "Fresh Strawberry Pie",
+    "is_vegan": true,
     "ingredients": [
       "shell",
       "cleaned strawberries",
@@ -473,6 +489,7 @@
   {
     "id": "easy-german-chocolate-cake",
     "name": "Easy German Chocolate Cake",
+    "is_vegan": true,
     "ingredients": [
       "chocolate fudge cake",
       "white cake",
@@ -492,6 +509,7 @@
   {
     "id": "broccoli-salad",
     "name": "Broccoli Salad",
+    "is_vegan": true,
     "ingredients": [
       "broccoli",
       "bacon",
@@ -518,6 +536,7 @@
   {
     "id": "strawberry-whatever",
     "name": "Strawberry Whatever",
+    "is_vegan": true,
     "ingredients": [
       "frozen strawberries",
       "pineapple",
@@ -549,6 +568,7 @@
   {
     "id": "eggless-milkless-applesauce-cake",
     "name": "Eggless Milkless Applesauce Cake",
+    "is_vegan": true,
     "ingredients": [
       "sugar",
       "shortening",
@@ -581,6 +601,7 @@
   {
     "id": "grandma-hanraths-banana-breadfort-collins-colorado",
     "name": "Grandma Hanrath'S Banana Breadfort Collins, Colorado",
+    "is_vegan": false,
     "ingredients": [
       "sugar",
       "shortening",
@@ -613,6 +634,7 @@
   {
     "id": "chocolate-frango-mints",
     "name": "Chocolate Frango Mints",
+    "is_vegan": false,
     "ingredients": [
       "cake mix",
       "chocolate fudge pudding",
@@ -641,6 +663,7 @@
   {
     "id": "cuddy-farms-marinated-turkey",
     "name": "Cuddy Farms Marinated Turkey",
+    "is_vegan": false,
     "ingredients": [
       "vegetable oil",
       "soy sauce",
@@ -660,6 +683,7 @@
   {
     "id": "spaghetti-sauce-to-can",
     "name": "Spaghetti Sauce To Can",
+    "is_vegan": true,
     "ingredients": [
       "tomatoes",
       "oil",
@@ -699,6 +723,7 @@
   {
     "id": "prize-winning-meat-loaf",
     "name": "Prize-Winning Meat Loaf",
+    "is_vegan": false,
     "ingredients": [
       "ground beef",
       "tomato juice",
@@ -730,6 +755,7 @@
   {
     "id": "smothered-round-steak-servings-4",
     "name": "Smothered Round Steak(Servings: 4)",
+    "is_vegan": false,
     "ingredients": [
       "steak",
       "ground black pepper",
@@ -766,6 +792,7 @@
   {
     "id": "corral-barbecued-beef-steak-strips",
     "name": "Corral Barbecued Beef Steak Strips",
+    "is_vegan": false,
     "ingredients": [
       "long",
       "cooking oil",
@@ -799,6 +826,7 @@
   {
     "id": "easy-fudge",
     "name": "Easy Fudge",
+    "is_vegan": false,
     "ingredients": [
       "condensed milk",
       "semi-sweet chocolate chips",
@@ -824,6 +852,7 @@
   {
     "id": "taco-filled-green-pepper",
     "name": "Taco-Filled Green Pepper",
+    "is_vegan": false,
     "ingredients": [
       "ground beef",
       "taco seasoning",
@@ -854,6 +883,7 @@
   {
     "id": "one-hour-rolls",
     "name": "One Hour Rolls",
+    "is_vegan": false,
     "ingredients": [
       "milk",
       "sugar",
@@ -886,6 +916,7 @@
   {
     "id": "punch-bowl-fruit-salad",
     "name": "Punch Bowl Fruit Salad",
+    "is_vegan": true,
     "ingredients": [
       "peaches",
       "fruit cocktail",
@@ -923,6 +954,7 @@
   {
     "id": "summer-chicken",
     "name": "Summer Chicken",
+    "is_vegan": false,
     "ingredients": [
       "chicken cutlets",
       "oil",
@@ -945,6 +977,7 @@
   {
     "id": "cherry-pizza",
     "name": "Cherry Pizza",
+    "is_vegan": true,
     "ingredients": [
       "cherry pie mix",
       "deluxe white cake mix",
@@ -970,6 +1003,7 @@
   {
     "id": "potato-and-cheese-pie",
     "name": "Potato And Cheese Pie",
+    "is_vegan": false,
     "ingredients": [
       "eggs",
       "salt",
@@ -999,6 +1033,7 @@
   {
     "id": "tuna-macaroni-casserole",
     "name": "Tuna Macaroni Casserole",
+    "is_vegan": false,
     "ingredients": [
       "macaroni",
       "tuna",
@@ -1022,6 +1057,7 @@
   {
     "id": "artichoke-dip",
     "name": "Artichoke Dip",
+    "is_vegan": true,
     "ingredients": [
       "artichoke hearts",
       "mayonnaise",
@@ -1043,6 +1079,7 @@
   {
     "id": "broccoli-dip-for-crackers",
     "name": "Broccoli Dip For Crackers",
+    "is_vegan": true,
     "ingredients": [
       "sour cream",
       "vegetable soup mix",
@@ -1066,6 +1103,7 @@
   {
     "id": "summer-spaghetti",
     "name": "Summer Spaghetti",
+    "is_vegan": true,
     "ingredients": [
       "salad supreme",
       "italian dressing"
@@ -1087,6 +1125,7 @@
   {
     "id": "pear-lime-salad",
     "name": "Pear-Lime Salad",
+    "is_vegan": true,
     "ingredients": [
       "pear halves",
       "lime gelatin",
@@ -1116,6 +1155,7 @@
   {
     "id": "watermelon-rind-pickles",
     "name": "Watermelon Rind Pickles",
+    "is_vegan": true,
     "ingredients": [
       "watermelon rind",
       "sugar",
@@ -1146,6 +1186,7 @@
   {
     "id": "chicken-stew",
     "name": "Chicken Stew",
+    "is_vegan": false,
     "ingredients": [
       "chicken",
       "potatoes",
