@@ -235,7 +235,7 @@ async function handleVeganChange(e) {
             </select>
 
             {/* diet options */}
-            <div
+            {/* <div
               style={{
                 display: "flex",
                 gap: "8px",
@@ -265,7 +265,7 @@ async function handleVeganChange(e) {
                   Clear
                 </button>
               )}
-            </div>
+            </div> */}
 
             {filteredRecipes.length === 0 ? (
               <p>No recipes matched your search.</p>

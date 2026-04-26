@@ -218,7 +218,7 @@ export default function ResultsPage() {
         </div>
 
         {/* diet options */}
-        <div
+        {/* <div
           style={{
             display: "flex",
             gap: "8px",
@@ -247,7 +247,7 @@ export default function ResultsPage() {
               Clear
             </button>
           )}
-        </div>
+        </div> */}
 
         {/* Body */}
         <div className="results-shell-body">
